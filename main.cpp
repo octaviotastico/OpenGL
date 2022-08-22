@@ -17,8 +17,8 @@ int main() {
   glfwInit();
 
   // Configure GLFW
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR_VERSION);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR_VERSION);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 #ifdef __APPLE__
@@ -26,7 +26,7 @@ int main() {
 #endif
 
   // Create a GLFWwindow object that we can use for GLFW's functions
-  window = glfwCreateWindow(800, 600, "asdada", NULL, NULL);
+  window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, NULL, NULL);
 
   // Check if the window was succesfully created
   if (window == NULL) {
