@@ -4,8 +4,6 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                // "/opt/homebrew/Cellar/glew/2.2.0_1/include",
-                // "/opt/homebrew/lib/"
                 "/opt/homebrew/include/"
             ],
             "defines": [],
@@ -15,7 +13,8 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "macos-clang-arm64"
+            "intelliSenseMode": "macos-clang-arm64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

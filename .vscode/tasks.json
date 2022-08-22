@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "C/C++: g++ build active file",
+      "command": "/usr/bin/g++",
+      "args": [
+        "-std=c++17",
+        "-Wall",
+        "-g",
+
+        "-I${workspaceFolder}/dependencies/include",
+        "-L${workspaceFolder}/dependencies/library",
+
+        "${workspaceFolder}/dependencies/library/libglfw.3.3.dylib",
+        "${workspaceFolder}/dependencies/library/glad.c",
+
+        "${workspaceFolder}/src/*.cpp",
+        "${workspaceFolder}/*.cpp",
+
+        "-o",
+        "${workspaceFolder}/openGL",
+
+        "-framework",
+        "OpenGL",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "IOKit",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "CoreFoundation",
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "compiler: /usr/bin/g++"
+    }
+  ]
+}
