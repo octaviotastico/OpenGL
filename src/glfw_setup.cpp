@@ -32,14 +32,8 @@ GLFWwindow* glfw_setup_window(int major_version, int minor_version, int width, i
 
   glfwMakeContextCurrent(window);
 
-  // Set this to true so GLEW uses a modern approach to retrieving function pointers and extensions
-  glewExperimental = GL_TRUE;
-
-  // Initialize GLEW to setup the OpenGL Function pointers
-  if (glewInit() != GLEW_OK) {
-    std::cout << "Failed to initialize GLEW" << std::endl;
-    glfwTerminate();
-
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    std::cout << "Failed to initialize OpenGL context" << std::endl;
     return nullptr;
   }
 
