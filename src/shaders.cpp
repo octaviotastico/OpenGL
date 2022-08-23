@@ -1,69 +1,70 @@
 #include "shaders.hpp"
 
-unsigned int checkShaderCompilation(unsigned int shader, std::string shader_type) {
-  int success;
-  char infoLog[512];
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+static int shaderCompilationFailed(unsigned int shader, std::string shader_type) {
+  // First get compilation status
+  int compile_status;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);
 
-  if (!success) {
-    glGetShaderInfoLog(shader, 512, NULL, infoLog);
+  if (compile_status == GL_FALSE) {
+    int message_length;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &message_length);
+    char* error_message = new char[message_length];
+    glGetShaderInfoLog(shader, message_length, NULL, error_message);
+
+    // If compilation failed, show error message
     std::cout << "ERROR::SHADER::" << shader_type << "::COMPILATION_FAILED" << std::endl;
-    std::cout << infoLog << std::endl;
-    return 0;
+    std::cout << error_message << std::endl;
+    return EXIT_FAILURE;
   }
 
-  return shader;
+  return EXIT_SUCCESS;
 }
 
-unsigned int generateVertexShader() {
+static unsigned int compileShader(unsigned int type, const char* source) {
+  unsigned int id = glCreateShader(type);
+  glShaderSource(id, 1, &source, NULL);
+  glCompileShader(id);
+  return id;
+}
+
+unsigned int generateShaderProgram() {
+  // Shader sources
   const char* vertexShaderSource =
       "#version 330 core\n"
-      "layout (location = 0) in vec3 aPos;\n"
+      "layout (location = 0) in vec4 position;\n"
 
       "void main()\n"
       "{\n"
-      "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+      "   gl_Position = position;\n"
       "}\n\0";
 
-  unsigned int vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShaderID, 1, &vertexShaderSource, NULL);
-  glCompileShader(vertexShaderID);
-
-  return checkShaderCompilation(vertexShaderID, "VERTEX");
-}
-
-unsigned int generateFragmentShader() {
   const char* fragmentShaderSource =
       "#version 330 core\n"
-      "out vec4 FragColor;\n"
+      "out vec4 color;\n"
 
       "void main()\n"
       "{\n"
-      "   FragColor = vec4(1.0f, 0.5f, 0.5f, 1.0f);\n"
+      "   color = vec4(1.0f, 0.25f, 1.0f, 1.0f);\n"
       "}\n\0";
 
-  unsigned int fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShaderID, 1, &fragmentShaderSource, NULL);
-  glCompileShader(fragmentShaderID);
-
-  return checkShaderCompilation(fragmentShaderID, "FRAGMENT");
-}
-
-void generateShaderProgram() {
   // Create shaders and programs
   unsigned int programID = glCreateProgram();
-  unsigned int vertexShaderID = generateVertexShader();
-  unsigned int fragmentShaderID = generateFragmentShader();
+  unsigned int vertexShaderID = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
+  unsigned int fragmentShaderID = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
 
   // Check if the shaders were successfully created
-  if (vertexShaderID == 0 || fragmentShaderID == 0) {
-    return;
+  if (shaderCompilationFailed(vertexShaderID, "VERTEX") ||
+      shaderCompilationFailed(fragmentShaderID, "FRAGMENT")) {
+    glDeleteShader(vertexShaderID);
+    glDeleteShader(fragmentShaderID);
+    glDeleteProgram(programID);
+    return 0;
   }
 
   // Attach shaders to the program
   glAttachShader(programID, vertexShaderID);
   glAttachShader(programID, fragmentShaderID);
-  glLinkProgram(programID);  // TODO: check if the program has linked correctly
+  glLinkProgram(programID);
   glValidateProgram(programID);
 
   // Delete the shaders as they're linked into
@@ -73,4 +74,6 @@ void generateShaderProgram() {
 
   // Use the program
   glUseProgram(programID);
+
+  return programID;
 }

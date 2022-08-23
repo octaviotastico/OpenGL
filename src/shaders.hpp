@@ -4,4 +4,4 @@
 // Libraries imports
 #include <GLFW/glfw3.h>
 
-void generateShaderProgram();
+unsigned int generateShaderProgram();
