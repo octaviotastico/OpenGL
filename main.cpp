@@ -53,15 +53,20 @@ int main() {
       +0.0f, +0.5f   // Top
   };
 
-  unsigned int buffer;
-  glGenBuffers(1, &buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, buffer);
+  // Create a Vertex Array Object
+  unsigned int VAO;
+  glGenVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
+
+  // Create a Vertex Buffer Object
+  unsigned int VBO;
+  glGenBuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), triangle_positions, GL_STATIC_DRAW);
 
-  glEnableVertexAttribArray(0);
+  // Vertex attributes
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glEnableVertexAttribArray(0);
 
   // Generate a program with the vertex and the fragment shader
   unsigned int programID = generateShaderProgram();
@@ -86,7 +91,6 @@ int main() {
 
     // Draw the triangle
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    std::cout << "Drawing" << std::endl;
 
     // Swap the buffers
     glfwSwapBuffers(window);
