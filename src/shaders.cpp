@@ -48,16 +48,14 @@ static unsigned int compileShader(unsigned int type, const char* source) {
 }
 
 unsigned int generateShaderProgram() {
-  std::cout << "GENERATING SHADER PROGRAM" << std::endl;
-
   // Shader sources
   const char* vertexShaderSource =
       "#version 330 core\n"
-      "layout (location = 0) in vec4 position;\n"
+      "layout(location = 0) in vec2 position;\n"
 
       "void main()\n"
       "{\n"
-      "   gl_Position = position;\n"
+      "   gl_Position = vec4(position.xy, 0.0, 1.0);\n"
       "}\n";
 
   const char* fragmentShaderSource =
@@ -66,7 +64,7 @@ unsigned int generateShaderProgram() {
 
       "void main()\n"
       "{\n"
-      "   color = vec4(1.0f, 0.25f, 1.0f, 1.0f);\n"
+      "   color = vec4(1.0, 0.25, 1.0, 1.0);\n"
       "}\n";
 
   // Create shaders and programs

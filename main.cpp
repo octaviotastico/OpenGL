@@ -46,17 +46,8 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  // Generate a program with the vertex and the fragment shader
-  unsigned int programID = generateShaderProgram();
-
-  // Check if the program was successfully created
-  if (programID == 0) {
-    std::cout << "Failed to generate shader program" << std::endl;
-    return EXIT_FAILURE;
-  }
-
   // Coordinates of the vertices of the triangle
-  float triangle_positions[] = {
+  float triangle_positions[6] = {
       -0.5f, -0.5f,  // Bottom left
       +0.5f, -0.5f,  // Bottom right
       +0.0f, +0.5f   // Top
@@ -69,6 +60,17 @@ int main() {
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  // Generate a program with the vertex and the fragment shader
+  unsigned int programID = generateShaderProgram();
+
+  // Check if the program was successfully created
+  if (programID == 0) {
+    std::cout << "Failed to generate shader program" << std::endl;
+    return EXIT_FAILURE;
+  }
 
   // Use the shader program
   glUseProgram(programID);
@@ -84,6 +86,7 @@ int main() {
 
     // Draw the triangle
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    std::cout << "Drawing" << std::endl;
 
     // Swap the buffers
     glfwSwapBuffers(window);
