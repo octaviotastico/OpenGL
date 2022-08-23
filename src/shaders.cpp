@@ -20,6 +20,26 @@ static int shaderCompilationFailed(unsigned int shader, std::string shader_type)
   return EXIT_SUCCESS;
 }
 
+static int programLinkFailed(unsigned int programID) {
+  // First get link status
+  int link_status;
+  glGetProgramiv(programID, GL_LINK_STATUS, &link_status);
+
+  if (link_status == GL_FALSE) {
+    int message_length;
+    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &message_length);
+    char* error_message = new char[message_length];
+    glGetProgramInfoLog(programID, message_length, NULL, error_message);
+
+    // If linking failed, show error message
+    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED" << std::endl;
+    std::cout << error_message << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
+}
+
 static unsigned int compileShader(unsigned int type, const char* source) {
   unsigned int id = glCreateShader(type);
   glShaderSource(id, 1, &source, NULL);
@@ -28,6 +48,8 @@ static unsigned int compileShader(unsigned int type, const char* source) {
 }
 
 unsigned int generateShaderProgram() {
+  std::cout << "GENERATING SHADER PROGRAM" << std::endl;
+
   // Shader sources
   const char* vertexShaderSource =
       "#version 330 core\n"
@@ -36,16 +58,16 @@ unsigned int generateShaderProgram() {
       "void main()\n"
       "{\n"
       "   gl_Position = position;\n"
-      "}\n\0";
+      "}\n";
 
   const char* fragmentShaderSource =
       "#version 330 core\n"
-      "out vec4 color;\n"
+      "layout(location = 0) out vec4 color;\n"
 
       "void main()\n"
       "{\n"
       "   color = vec4(1.0f, 0.25f, 1.0f, 1.0f);\n"
-      "}\n\0";
+      "}\n";
 
   // Create shaders and programs
   unsigned int programID = glCreateProgram();
@@ -67,13 +89,19 @@ unsigned int generateShaderProgram() {
   glLinkProgram(programID);
   glValidateProgram(programID);
 
+  // Check if the program was successfully linked
+  if (programLinkFailed(programID)) {
+    glDeleteShader(vertexShaderID);
+    glDeleteShader(fragmentShaderID);
+    glDeleteProgram(programID);
+    return 0;
+  }
+
   // Delete the shaders as they're linked into
   // the program now and no longer necessary
   glDeleteShader(vertexShaderID);
   glDeleteShader(fragmentShaderID);
 
-  // Use the program
-  glUseProgram(programID);
-
+  // Return the program
   return programID;
 }

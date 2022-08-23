@@ -38,11 +38,20 @@ int main() {
 
   // Make the context current
   glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   // Initialize GLAD (load all OpenGL function pointers)
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize OpenGL context" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // Generate a program with the vertex and the fragment shader
+  unsigned int programID = generateShaderProgram();
+
+  // Check if the program was successfully created
+  if (programID == 0) {
+    std::cout << "Failed to generate shader program" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -53,17 +62,38 @@ int main() {
       +0.0f, +0.5f   // Top
   };
 
-  // Generate the vertex shader
-  generateShaderProgram();
+  unsigned int buffer;
+  glGenBuffers(1, &buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, buffer);
+  glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), triangle_positions, GL_STATIC_DRAW);
+
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+
+  // Use the shader program
+  glUseProgram(programID);
 
   // Game loop
   while (!glfwWindowShouldClose(window)) {
-    process_input(window);
+    // Check for the user input
+    processInput(window);
 
-    continue;
+    // Clear the screen
+    glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw the triangle
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Swap the buffers
+    glfwSwapBuffers(window);
+
+    // Poll for events
+    glfwPollEvents();
   }
 
-  // Terminate GLFW, clearing any resources allocated by GLFW.
+  // Clear all resources allocated by GLFW.
+  glDeleteShader(programID);
   glfwTerminate();
 
   return EXIT_SUCCESS;
