@@ -7,6 +7,7 @@
 
 // Local imports
 #include "src/constants.hpp"
+#include "src/shaders.hpp"
 #include "src/utils.hpp"
 
 int main() {
@@ -25,7 +26,7 @@ int main() {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  // Create a GLFWwindow object that we can use for GLFW's functions
+  // Create a GLFWwindow
   window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, NULL, NULL);
 
   // Check if the window was succesfully created
@@ -35,16 +36,30 @@ int main() {
     return EXIT_FAILURE;
   }
 
+  // Make the context current
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+  // Initialize GLAD (load all OpenGL function pointers)
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize OpenGL context" << std::endl;
     return EXIT_FAILURE;
   }
 
+  // Coordinates of the vertices of the triangle
+  float triangle_positions[] = {
+      -0.5f, -0.5f,  // Bottom left
+      +0.5f, -0.5f,  // Bottom right
+      +0.0f, +0.5f   // Top
+  };
+
+  // Generate the vertex shader
+  generateShaderProgram();
+
   // Game loop
   while (!glfwWindowShouldClose(window)) {
+    process_input(window);
+
     continue;
   }
 
