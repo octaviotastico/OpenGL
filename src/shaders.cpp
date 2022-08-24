@@ -48,29 +48,14 @@ static unsigned int compileShader(unsigned int type, const char* source) {
 }
 
 unsigned int generateShaderProgram() {
-  // Shader sources
-  const char* vertexShaderSource =
-      "#version 330 core\n"
-      "layout(location = 0) in vec2 position;\n"
-
-      "void main()\n"
-      "{\n"
-      "   gl_Position = vec4(position.xy, 0.0, 1.0);\n"
-      "}\n";
-
-  const char* fragmentShaderSource =
-      "#version 330 core\n"
-      "layout(location = 0) out vec4 color;\n"
-
-      "void main()\n"
-      "{\n"
-      "   color = vec4(1.0, 0.25, 1.0, 1.0);\n"
-      "}\n";
+  // Get the shader sources using the readShaderFile function
+  std::string vertexShaderSource = readShaderFile("rsc/shaders/basic.vertex.shader");
+  std::string fragmentShaderSource = readShaderFile("rsc/shaders/basic.fragment.shader");
 
   // Create shaders and programs
   unsigned int programID = glCreateProgram();
-  unsigned int vertexShaderID = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
-  unsigned int fragmentShaderID = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+  unsigned int vertexShaderID = compileShader(GL_VERTEX_SHADER, vertexShaderSource.c_str());
+  unsigned int fragmentShaderID = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource.c_str());
 
   // Check if the shaders were successfully created
   if (shaderCompilationFailed(vertexShaderID, "VERTEX") ||
