@@ -100,7 +100,7 @@ int main() {
   }
 
   // Clear all resources allocated by GLFW.
-  glDeleteShader(programID);
+  glDeleteProgram(programID);
   glfwTerminate();
 
   return EXIT_SUCCESS;
