@@ -49,8 +49,8 @@ static unsigned int compileShader(unsigned int type, const char* source) {
 
 unsigned int generateShaderProgram() {
   // Get the shader sources using the readShaderFile function
-  std::string vertexShaderSource = readShaderFile("rsc/shaders/basic.vertex.shader");
-  std::string fragmentShaderSource = readShaderFile("rsc/shaders/basic.fragment.shader");
+  std::string vertexShaderSource = readShaderFile("rsc/shaders/basic.vertex.glsl");
+  std::string fragmentShaderSource = readShaderFile("rsc/shaders/basic.fragment.glsl");
 
   // Create shaders and programs
   unsigned int programID = glCreateProgram();
