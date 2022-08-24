@@ -47,10 +47,16 @@ int main() {
   }
 
   // Coordinates of the vertices of the triangle
-  float triangle_positions[6] = {
-      -0.5f, -0.5f,  // Bottom left
-      +0.5f, -0.5f,  // Bottom right
-      +0.0f, +0.5f   // Top
+  float rectangle_positions[] = {
+      -0.5f, -0.5f,  // Bottom Left
+      +0.5f, -0.5f,  // Bottom Right
+      +0.5f, +0.5f,  // Top Right
+      -0.5f, +0.5f,  // Top Left
+  };
+
+  unsigned int rectangle_indices[] = {
+      0, 1, 2,  // First triangle
+      0, 2, 3,  // Second triangle
   };
 
   // Create a Vertex Array Object
@@ -62,7 +68,13 @@ int main() {
   unsigned int VBO;
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), triangle_positions, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), rectangle_positions, GL_STATIC_DRAW);
+
+  // Create an Element Buffer Object (index buffer)
+  unsigned int EBO;
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), rectangle_indices, GL_STATIC_DRAW);
 
   // Vertex attributes
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
@@ -90,7 +102,7 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw the triangle
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Swap the buffers
     glfwSwapBuffers(window);
