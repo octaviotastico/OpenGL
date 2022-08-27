@@ -39,6 +39,7 @@ int main() {
   // Make the context current
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  glfwSwapInterval(1);  // Enable vsync
 
   // Initialize GLAD (load all OpenGL function pointers)
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -47,14 +48,14 @@ int main() {
   }
 
   // Coordinates of the vertices of the triangle
-  float rectangle_positions[] = {
+  float rectanglePositions[] = {
       -0.5f, -0.5f,  // Bottom Left
       +0.5f, -0.5f,  // Bottom Right
       +0.5f, +0.5f,  // Top Right
       -0.5f, +0.5f,  // Top Left
   };
 
-  unsigned int rectangle_indices[] = {
+  unsigned int rectangleIndices[] = {
       0, 1, 2,  // First triangle
       0, 2, 3,  // Second triangle
   };
@@ -68,13 +69,13 @@ int main() {
   unsigned int VBO;
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), rectangle_positions, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), rectanglePositions, GL_STATIC_DRAW);
 
   // Create an Element Buffer Object (index buffer)
   unsigned int EBO;
   glGenBuffers(1, &EBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), rectangle_indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), rectangleIndices, GL_STATIC_DRAW);
 
   // Vertex attributes
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
@@ -92,6 +93,12 @@ int main() {
   // Use the shader program
   glUseProgram(programID);
 
+  // Get uniform locations
+  int uColor = glGetUniformLocation(programID, "uColor");
+  float red = 1.0f, green = 0.25f, blue = 0.0f;
+  glUniform4f(uColor, red, green, blue, 1.0f);
+  float change = 0.01f;
+
   // Game loop
   while (!glfwWindowShouldClose(window)) {
     // Check for the user input
@@ -100,6 +107,16 @@ int main() {
     // Clear the screen
     glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the color of the rectangle
+    glUniform4f(uColor, red, green, blue, 1.0f);
+
+    // Update color
+    if (red > 1.0f || red < 0.0f) {
+      change *= -1.0f;
+    }
+    red -= change;
+    blue += change;
 
     // Draw the triangle
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
