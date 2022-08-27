@@ -49,10 +49,11 @@ int main() {
 
   // Coordinates of the vertices of the triangle
   float rectanglePositions[] = {
-      -0.5f, -0.5f,  // Bottom Left
-      +0.5f, -0.5f,  // Bottom Right
-      +0.5f, +0.5f,  // Top Right
-      -0.5f, +0.5f,  // Top Left
+      // Positions  // Colors (RGBA)
+      -0.5f, -0.5f, 1.0f, 0.0f, 1.0f, 1.0f,  // Bottom Left
+      +0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f,  // Bottom Right
+      +0.5f, +0.5f, 1.0f, 0.0f, 1.0f, 1.0f,  // Top Right
+      -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 1.0f,  // Top Left
   };
 
   unsigned int rectangleIndices[] = {
@@ -69,7 +70,7 @@ int main() {
   unsigned int VBO;
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), rectanglePositions, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 4 * 6 * sizeof(float), rectanglePositions, GL_STATIC_DRAW);
 
   // Create an Element Buffer Object (index buffer)
   unsigned int EBO;
@@ -77,9 +78,13 @@ int main() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), rectangleIndices, GL_STATIC_DRAW);
 
-  // Vertex attributes
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+  // Vertex attributes (how to read the VBO)
+  // Position
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+  // Color
+  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(2 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   // Generate a program with the vertex and the fragment shader
   unsigned int programID = generateShaderProgram();
