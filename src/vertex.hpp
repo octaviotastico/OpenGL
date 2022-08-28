@@ -1,29 +1,49 @@
-class Vertex {
- private:
-  // Positions of the vertices in (x,y,z,w) coordinate system.
-  float positionArray[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-  // Colors of the vertex in RGBA.
-  float colorArray[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-  // Texture coordenates of vertex.
-  float textureArray[3] = {0.0f, 0.0f, 0.0f};
-
+class Position {
  public:
+  float position[4];
+  Position(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f) {
+    position[0] = x;
+    position[1] = y;
+    position[2] = z;
+    position[3] = w;
+  }
+};
+
+class Color {
+ public:
+  float color[4];
+  Color(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f) {
+    color[0] = r;
+    color[1] = g;
+    color[2] = b;
+    color[3] = a;
+  }
+};
+
+class TextureCoords {
+ public:
+  float texture[3];
+  TextureCoords(float s = 0.0f, float t = 0.0f, float r = 0.0f) {
+    texture[0] = s;
+    texture[1] = t;
+    texture[2] = r;
+  }
+};
+
+class Vertex {
+ public:
+  Position position;
+  Color color;
+  TextureCoords textureCoords;
   // Create a new Vertex object.
-  Vertex();
-  // Delete created Vertex object.
-  ~Vertex();
-
-  // Set the position of the vertex.
-  void setPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f);
-  // Set the color of the vertex.
-  void setColor(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
-  // Set the texture coordenates of the vertex.
-  void setTexture(float u = 0.0f, float v = 0.0f, float w = 0.0f);
-
-  // Get the color of the vertex.
-  float* getColor();
-  // Get the position of the vertex.
-  float* getPosition();
-  // Get the color of the vertex.
-  float* getTexture();
+  Vertex(Position p) { position = p; }
+  Vertex(Position p, Color c) {
+    position = p;
+    color = c;
+  }
+  Vertex(Position p, Color c, TextureCoords t) {
+    position = p;
+    color = c;
+    textureCoords = t;
+  }
 };

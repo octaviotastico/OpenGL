@@ -9,6 +9,7 @@
 #include "src/constants.hpp"
 #include "src/shaders.hpp"
 #include "src/utils.hpp"
+#include "src/vertex.hpp"
 
 int main() {
   // Create the window
@@ -48,12 +49,11 @@ int main() {
   }
 
   // Coordinates of the vertices of the triangle
-  float rectanglePositions[] = {
-      // Positions  // Colors (RGBA)
-      -0.5f, -0.5f, 1.0f, 0.0f, 1.0f, 1.0f,  // Bottom Left
-      +0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f,  // Bottom Right
-      +0.5f, +0.5f, 1.0f, 0.0f, 1.0f, 1.0f,  // Top Right
-      -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 1.0f,  // Top Left
+  Vertex rectangleVertices[4] = {
+      Vertex(Position{-0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}),
+      Vertex(Position{+0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}),
+      Vertex(Position{+0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}),
+      Vertex(Position{-0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}),
   };
 
   unsigned int rectangleIndices[] = {
@@ -70,20 +70,20 @@ int main() {
   unsigned int VBO;
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, 4 * 6 * sizeof(float), rectanglePositions, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), rectangleVertices, GL_STATIC_DRAW);
 
   // Create an Element Buffer Object (index buffer)
   unsigned int EBO;
   glGenBuffers(1, &EBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), rectangleIndices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleIndices), rectangleIndices, GL_STATIC_DRAW);
 
   // Vertex attributes (how to read the VBO)
   // Position
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
   glEnableVertexAttribArray(0);
   // Color
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(2 * sizeof(float)));
+  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
   glEnableVertexAttribArray(1);
 
   // Generate a program with the vertex and the fragment shader
