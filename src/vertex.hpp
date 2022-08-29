@@ -1,3 +1,6 @@
+#ifndef __VERTEX_HPP__
+#define __VERTEX_HPP__
+
 #include <string>
 #include <vector>
 
@@ -39,9 +42,8 @@ class Texture {
   std::string texture_path;
   std::vector<TextureCoords> coords;
 
-  Texture(TextureCoords coordsArray[]) {
-    int size = sizeof(coordsArray) / sizeof(TextureCoords);
-    for (int i = 0; i < size; i++) {
+  Texture(TextureCoords coordsArray[], unsigned int size) {
+    for (unsigned int i = 0; i < size; i++) {
       coords.push_back(coordsArray[i]);
     }
   }
@@ -64,3 +66,5 @@ class Vertex {
     textureCoords = t;
   }
 };
+
+#endif  // __VERTEX_HPP__
