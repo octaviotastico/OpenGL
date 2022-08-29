@@ -7,7 +7,7 @@
 class IndexBuffer {
  private:
   unsigned int EBO_ID;
-  unsigned int count;
+  unsigned int size;
 
  public:
   IndexBuffer(const void* data, unsigned int size);
@@ -16,7 +16,7 @@ class IndexBuffer {
   void bind() const;
   void unbind() const;
 
-  inline unsigned int getCount() const { return count; }
+  inline unsigned int getSize() const { return size; }
 };
 
 #endif  // __INDEX_BUFFER_HPP__

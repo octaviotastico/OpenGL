@@ -1,9 +1,9 @@
 #include "indexBuffer.hpp"
 
-IndexBuffer::IndexBuffer(const void* indices, unsigned int count) : count(count) {
+IndexBuffer::IndexBuffer(const void* indices, unsigned int size) : size(size) {
   glGenBuffers(1, &EBO_ID);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_ID);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
 }
 
 IndexBuffer::~IndexBuffer() { glDeleteBuffers(1, &EBO_ID); }
