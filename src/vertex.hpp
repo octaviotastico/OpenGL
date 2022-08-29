@@ -1,3 +1,6 @@
+#include <string>
+#include <vector>
+
 class Position {
  public:
   float position[4];
@@ -27,6 +30,20 @@ class TextureCoords {
     texture[0] = s;
     texture[1] = t;
     texture[2] = r;
+  }
+};
+
+// TODO: Finish this class xD
+class Texture {
+ public:
+  std::string texture_path;
+  std::vector<TextureCoords> coords;
+
+  Texture(TextureCoords coordsArray[]) {
+    int size = sizeof(coordsArray) / sizeof(TextureCoords);
+    for (int i = 0; i < size; i++) {
+      coords.push_back(coordsArray[i]);
+    }
   }
 };
 
