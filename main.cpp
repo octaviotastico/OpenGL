@@ -7,9 +7,13 @@
 
 // Local imports
 #include "src/constants.hpp"
+#include "src/indexBuffer.hpp"
 #include "src/shaders.hpp"
 #include "src/utils.hpp"
 #include "src/vertex.hpp"
+#include "src/vertexArray.hpp"
+#include "src/vertexBuffer.hpp"
+#include "src/vertexBufferLayout.hpp"
 
 int main() {
   // Create the window
@@ -56,35 +60,52 @@ int main() {
       Vertex(Position{-0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}),
   };
 
+  // Indices of the vertices of the triangle
   unsigned int rectangleIndices[] = {
       0, 1, 2,  // First triangle
       0, 2, 3,  // Second triangle
   };
 
   // Create a Vertex Array Object
-  unsigned int VAO;
-  glGenVertexArrays(1, &VAO);
-  glBindVertexArray(VAO);
+  VertexArray VAO;
+  /* This replaces:
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+  */
 
   // Create a Vertex Buffer Object
-  unsigned int VBO;
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), rectangleVertices, GL_STATIC_DRAW);
+  VertexBuffer VBO(rectangleVertices, sizeof(rectangleVertices));
+  /* This replaces:
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), rectangleVertices, GL_STATIC_DRAW);
+  */
+
+  // Create a Vertex Buffer Layout (how to read the VBO)
+  VertexBufferLayout layout(sizeof(Vertex));
+  layout.push(4, GL_FLOAT, offsetof(Vertex, position));  // Position
+  layout.push(4, GL_FLOAT, offsetof(Vertex, color));     // Color
+  /* This replaces:
+    .. -> Position
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glEnableVertexAttribArray(0);
+    .. -> Color
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glEnableVertexAttribArray(1);
+  */
+
+  VAO.addVertexBufferObject(VBO, layout);
 
   // Create an Element Buffer Object (index buffer)
-  unsigned int EBO;
-  glGenBuffers(1, &EBO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleIndices), rectangleIndices, GL_STATIC_DRAW);
-
-  // Vertex attributes (how to read the VBO)
-  // Position
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-  glEnableVertexAttribArray(0);
-  // Color
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-  glEnableVertexAttribArray(1);
+  IndexBuffer IBO(rectangleIndices, sizeof(rectangleIndices));
+  /* This replaces:
+    unsigned int IBO;
+    glGenBuffers(1, &IBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectangleIndices), rectangleIndices, GL_STATIC_DRAW);
+  */
 
   // Generate a program with the vertex and the fragment shader
   unsigned int programID = generateShaderProgram();
