@@ -16,18 +16,6 @@ class VertexBufferElement {
   unsigned int count;
   unsigned int offset;
   unsigned int normalized;
-
-  static unsigned int getSizeOfType(unsigned int type) {
-    switch (type) {
-      case GL_FLOAT:
-        return sizeof(float);
-      case GL_UNSIGNED_INT:
-        return sizeof(unsigned int);
-      case GL_UNSIGNED_BYTE:
-        return sizeof(unsigned char);
-    }
-    return 0;
-  }
 };
 
 class VertexBufferLayout {
@@ -37,7 +25,7 @@ class VertexBufferLayout {
 
  public:
   // Create a new VertexBufferLayout object.
-  VertexBufferLayout() : stride(0) {}
+  VertexBufferLayout(unsigned int stride) : stride(stride) {}
 
   // Delete created VertexBufferLayout object.
   ~VertexBufferLayout() {}
@@ -57,7 +45,6 @@ class VertexBufferLayout {
 
     // Push new element to the VertexBufferLayout.
     elements.push_back(VertexBufferElement{glType, count, offset, normalized});
-    stride += count * VertexBufferElement::getSizeOfType(glType);
   }
 
   // Get the stride of the VertexBufferLayout.

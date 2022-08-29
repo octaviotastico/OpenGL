@@ -13,7 +13,9 @@ void VertexArray::addVertexBufferObject(const VertexBuffer& vbo, const VertexBuf
   // Bind the VertexBuffer object
   vbo.bind();
 
+  unsigned int stride = layout.getStride();
   const auto elements = layout.getElements();
+
   for (int i = 0; i < elements.size(); i++) {
     const auto& element = elements[i];
     glEnableVertexAttribArray(i);
@@ -23,8 +25,7 @@ void VertexArray::addVertexBufferObject(const VertexBuffer& vbo, const VertexBuf
         element.count,       // Number of components (e.g. 4 for vec4, in RGBA)
         element.type,        // Type of the components (e.g. GL_FLOAT)
         element.normalized,  // Whether to normalize the data
-        layout.getStride(),  // Stride (size of the whole structure, e.g. Position + Colors ~=
-                             // sizeof(Vertex))
+        stride,  // Stride (size of the whole structure, e.g. Position + Colors ~= sizeof(Vertex))
         (const void*)(size_t)
             element.offset  // Offset of the component in the structure (e.g. offsetOf Color)
     );
