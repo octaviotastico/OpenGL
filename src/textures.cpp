@@ -35,14 +35,14 @@ Texture::Texture(std::string path, unsigned int type) {
 
   // Configure the texture
   // -> Wrapping
-  glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_REPEAT);
   // -> Filtering
   glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 
   // Send the texture to the GPU
-  glTexImage2D(textureType, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureBuffer);
+  glTexImage2D(textureType, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureBuffer);
 
   // Generate the mipmaps
   glGenerateMipmap(textureType);

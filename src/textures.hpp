@@ -35,6 +35,11 @@ class Texture {
   inline unsigned int getNumberOfChannels();
   inline std::string getPath();
   inline unsigned char* getBuffer();
+
+  inline void setTextureWrapS(unsigned int wrap = GL_REPEAT);
+  inline void setTextureWrapT(unsigned int wrap = GL_REPEAT);
+  inline void setTextureMinFilter(unsigned int filter = GL_LINEAR_MIPMAP_LINEAR);
+  inline void setTextureMagFilter(unsigned int filter = GL_NEAREST_MIPMAP_NEAREST);
 };
 
 #endif  // __TEXTURES_HPP__

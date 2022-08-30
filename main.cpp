@@ -2,6 +2,10 @@
 #include <GLAD/glad.h>   // GLAD: https://github.com/Dav1dde/glad
 #include <GLFW/glfw3.h>  // GLFW: https://es.wikipedia.org/wiki/GLFW
 
+#include <GLM/glm.hpp>  // GLM: https://github.com/g-truc/glm
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtc/type_ptr.hpp>
+
 // Standard Libraries
 #include <iostream>
 
@@ -54,45 +58,72 @@ int main() {
   }
 
   // Coordinates of the vertices of the triangle
-  Vertex rectangleVertices[8] = {
-      // Face 1 of square
+  Vertex rectangleVertices[24] = {
+
+      // -------- Front and Back ------- //
+
       Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 0
       Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 1
       Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 2
       Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 3
 
-      // Face 2 of square
       Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 4
       Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 5
       Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 6
       Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 7
+
+      // -------- Left and Right ------- //
+
+      Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 8
+      Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 9
+      Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 10
+      Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 11
+
+      Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 12
+      Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 13
+      Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 14
+      Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 15
+
+      // -------- Top and Bottom ------- //
+
+      Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 16
+      Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 17
+      Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 18
+      Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 19
+
+      Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 20
+      Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 21
+      Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 22
+      Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 23
+
   };
 
   // Indices of the vertices of the triangle
+  unsigned int indicesCount = 36;
   unsigned int rectangleIndices[36] = {
       // Front face of square
       0, 1, 2,  // Lower triangle
       0, 2, 3,  // Upper triangle
 
       // Back face of square
-      4, 5, 6,  // Lower triangle
-      4, 6, 7,  // Upper triangle
+      4, 5, 7,  // Lower triangle
+      5, 6, 7,  // Upper triangle
 
       // Left face of square
-      0, 7, 4,  // Lower triangle
-      0, 3, 7,  // Upper triangle
+      8, 11, 12,   // Lower triangle
+      11, 12, 15,  // Upper triangle
 
       // Right face of square
-      1, 2, 6,  // Lower triangle
-      1, 5, 6,  // Upper triangle
+      9, 13, 14,  // Lower triangle
+      9, 10, 14,  // Upper triangle
 
       // Top face of square
-      2, 3, 6,  // Lower triangle
-      3, 6, 7,  // Upper triangle
+      18, 19, 22,  // Lower triangle
+      19, 22, 23,  // Upper triangle
 
       // Bottom face of square
-      0, 5, 1,  // Lower triangle
-      0, 4, 5,  // Upper triangle
+      16, 17, 20,  // Lower triangle
+      17, 20, 21,  // Upper triangle
   };
 
   // Create a Vertex Array Object
@@ -127,17 +158,40 @@ int main() {
   texture.bind(sideTextureIndex);
   shaderProgram.updateUniform("uTexture", sideTextureIndex);
 
+  // Testing stuff
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  // Enable depth (enables the Z-buffer)
+  glEnable(GL_DEPTH_TEST);
+
+  // Create transformations matrices
+  glm::mat4 view = glm::mat4(1.0f);
+  glm::mat4 projection = glm::mat4(1.0f);
+
+  // Rotate it by the Y axis
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+
+  // Send the transformation matrices to the shader
+  shaderProgram.updateUniform("uView", view);
+  shaderProgram.updateUniform("uProjection", projection);
+
   // Game loop
   while (!glfwWindowShouldClose(window)) {
     // Check for the user input
     processInput(window);
 
-    // Clear the screen
+    // Color for clearing the screen
     glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    // Clears the screen and the depth buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100), glm::vec3(0.25f, 1.0f, 0.0f));
+    shaderProgram.updateUniform("uModel", model);
 
     // Draw the triangle
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
 
     // Swap the buffers
     glfwSwapBuffers(window);
