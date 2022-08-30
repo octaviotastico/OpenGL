@@ -54,17 +54,45 @@ int main() {
   }
 
   // Coordinates of the vertices of the triangle
-  Vertex rectangleVertices[4] = {
-      Vertex(Position{-0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),
-      Vertex(Position{+0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),
-      Vertex(Position{+0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),
-      Vertex(Position{-0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),
+  Vertex rectangleVertices[8] = {
+      // Face 1 of square
+      Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 0
+      Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 1
+      Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 2
+      Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 3
+
+      // Face 2 of square
+      Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),  // 4
+      Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),  // 5
+      Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),  // 6
+      Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),  // 7
   };
 
   // Indices of the vertices of the triangle
-  unsigned int rectangleIndices[] = {
-      0, 1, 2,  // First triangle
-      0, 2, 3,  // Second triangle
+  unsigned int rectangleIndices[36] = {
+      // Front face of square
+      0, 1, 2,  // Lower triangle
+      0, 2, 3,  // Upper triangle
+
+      // Back face of square
+      4, 5, 6,  // Lower triangle
+      4, 6, 7,  // Upper triangle
+
+      // Left face of square
+      0, 7, 4,  // Lower triangle
+      0, 3, 7,  // Upper triangle
+
+      // Right face of square
+      1, 2, 6,  // Lower triangle
+      1, 5, 6,  // Upper triangle
+
+      // Top face of square
+      2, 3, 6,  // Lower triangle
+      3, 6, 7,  // Upper triangle
+
+      // Bottom face of square
+      0, 5, 1,  // Lower triangle
+      0, 4, 5,  // Upper triangle
   };
 
   // Create a Vertex Array Object
@@ -94,9 +122,10 @@ int main() {
   }
 
   // Loading the texture
+  int sideTextureIndex = 0;
   Texture texture("rsc/textures/side.jpg");
-  texture.bind();
-  shaderProgram.updateUniform("uTexture", 0);
+  texture.bind(sideTextureIndex);
+  shaderProgram.updateUniform("uTexture", sideTextureIndex);
 
   // Game loop
   while (!glfwWindowShouldClose(window)) {
