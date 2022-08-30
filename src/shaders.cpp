@@ -103,23 +103,25 @@ void Shader::bind() { glUseProgram(programID); }
 
 void Shader::unbind() { glUseProgram(0); }
 
-void Shader::updateUniform(std::string name, int v0) {
-  int uniformID = glGetUniformLocation(programID, name.c_str());
-  glUniform1i(uniformID, v0);
+int Shader::getUniformLocation(std::string name) {
+  if (uniforms.count(name) == 0) {
+    uniforms[name] = glGetUniformLocation(programID, name.c_str());
+  }
+  return uniforms[name];
 }
-void Shader::updateUniform(std::string name, float v0) {
-  int uniformID = glGetUniformLocation(programID, name.c_str());
-  glUniform1f(uniformID, v0);
+
+void Shader::updateUniform(std::string name, int newValue) {
+  glUniform1i(getUniformLocation(name), newValue);
+}
+void Shader::updateUniform(std::string name, float newValue) {
+  glUniform1f(getUniformLocation(name), newValue);
 }
 void Shader::updateUniform(std::string name, float v0, float v1) {
-  int uniformID = glGetUniformLocation(programID, name.c_str());
-  glUniform2f(uniformID, v0, v1);
+  glUniform2f(getUniformLocation(name), v0, v1);
 }
 void Shader::updateUniform(std::string name, float v0, float v1, float v2) {
-  int uniformID = glGetUniformLocation(programID, name.c_str());
-  glUniform3f(uniformID, v0, v1, v2);
+  glUniform3f(getUniformLocation(name), v0, v1, v2);
 }
 void Shader::updateUniform(std::string name, float v0, float v1, float v2, float v3) {
-  int uniformID = glGetUniformLocation(programID, name.c_str());
-  glUniform4f(uniformID, v0, v1, v2, v3);
+  glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
 }

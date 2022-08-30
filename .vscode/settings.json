@@ -58,6 +58,10 @@
     "typeinfo": "cpp",
     "utility": "cpp",
     "sstream": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "__node_handle": "cpp",
+    "__tree": "cpp",
+    "map": "cpp",
+    "optional": "cpp"
   }
 }

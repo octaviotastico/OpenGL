@@ -3,6 +3,7 @@
 
 // Standard Libraries
 #include <iostream>
+#include <map>
 #include <string>
 
 // Libraries imports
@@ -24,6 +25,10 @@ class Shader {
   unsigned int fragmentShaderID;
   std::string fragmentShaderPath;
   std::string fragmentShaderSource;
+
+  // Uniforms
+  std::map<std::string, int> uniforms;
+  int getUniformLocation(std::string name);
 
   // Compiles a shader
   unsigned int compileShader(unsigned int type, const char* source);
