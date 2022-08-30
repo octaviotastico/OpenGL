@@ -16,6 +16,7 @@
 
         "${workspaceFolder}/dependencies/library/libglfw.3.3.dylib",
         "${workspaceFolder}/dependencies/library/glad.c",
+        "${workspaceFolder}/dependencies/library/stb_image.c",
 
         "${workspaceFolder}/src/*.cpp",
         "${workspaceFolder}/*.cpp",
