@@ -9,6 +9,7 @@
 #include "src/constants.hpp"
 #include "src/indexBuffer.hpp"
 #include "src/shaders.hpp"
+#include "src/textures.hpp"
 #include "src/utils.hpp"
 #include "src/vertex.hpp"
 #include "src/vertexArray.hpp"
@@ -54,10 +55,10 @@ int main() {
 
   // Coordinates of the vertices of the triangle
   Vertex rectangleVertices[4] = {
-      Vertex(Position{-0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}),
-      Vertex(Position{+0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}),
-      Vertex(Position{+0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}),
-      Vertex(Position{-0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}),
+      Vertex(Position{-0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 0.0f}),
+      Vertex(Position{+0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 0.0f}),
+      Vertex(Position{+0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{1.0f, 1.0f}),
+      Vertex(Position{-0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{0.0f, 1.0f}),
   };
 
   // Indices of the vertices of the triangle
@@ -85,8 +86,9 @@ int main() {
 
   // Create a Vertex Buffer Layout (how to read the VBO)
   VertexBufferLayout layout(sizeof(Vertex));
-  layout.push(4, GL_FLOAT, offsetof(Vertex, position));  // Position
-  layout.push(4, GL_FLOAT, offsetof(Vertex, color));     // Color
+  layout.push(4, GL_FLOAT, offsetof(Vertex, position));       // Position
+  layout.push(4, GL_FLOAT, offsetof(Vertex, color));          // Color
+  layout.push(2, GL_FLOAT, offsetof(Vertex, textureCoords));  // Texture Coords
   /* This replaces:
     .. -> Position
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
@@ -94,6 +96,9 @@ int main() {
     .. -> Color
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
     glEnableVertexAttribArray(1);
+    .. -> Texture Coords
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,
+    textureCoords)); glEnableVertexAttribArray(2);
   */
 
   VAO.addVertexBufferObject(VBO, layout);
@@ -120,6 +125,11 @@ int main() {
   // Variables for updating uniform uColor
   float red = 1.0f, green = 0.25f, blue = 0.0f;
   float change = 0.01f;
+
+  // Loading the texture
+  Texture texture("rsc/textures/side.jpg");
+  texture.bind();
+  shaderProgram.updateUniform("uTexture", 0);
 
   // Game loop
   while (!glfwWindowShouldClose(window)) {
