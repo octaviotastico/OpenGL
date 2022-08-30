@@ -1,7 +1,7 @@
 #ifndef __CONSTANTS_HPP__
 #define __CONSTANTS_HPP__
 
-const int WIDTH = 800;
+const int WIDTH = 600;
 const int HEIGHT = 600;
 const char* TITLE = "Heyyy :)";
 
