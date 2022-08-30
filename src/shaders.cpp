@@ -1,69 +1,78 @@
 #include "shaders.hpp"
 
-static int shaderCompilationFailed(unsigned int shader, std::string shader_type) {
+int Shader::checkShaderCompilationError(unsigned int shader, std::string shaderType) {
   // First get compilation status
-  int compile_status;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);
+  int compileStatus;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
 
-  if (compile_status == GL_FALSE) {
-    int message_length;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &message_length);
-    char* error_message = new char[message_length];
-    glGetShaderInfoLog(shader, message_length, NULL, error_message);
+  if (compileStatus == GL_FALSE) {
+    int messageLength;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &messageLength);
+    char* errorMessage = new char[messageLength];
+    glGetShaderInfoLog(shader, messageLength, NULL, errorMessage);
 
     // If compilation failed, show error message
-    std::cout << "ERROR::SHADER::" << shader_type << "::COMPILATION_FAILED" << std::endl;
-    std::cout << error_message << std::endl;
+    std::cout << "ERROR::SHADER::" << shaderType << "::COMPILATION_FAILED" << std::endl;
+    std::cout << errorMessage << std::endl;
     return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
 }
 
-static int programLinkFailed(unsigned int programID) {
+int Shader::checkProgramLinkingError() {
   // First get link status
   int link_status;
   glGetProgramiv(programID, GL_LINK_STATUS, &link_status);
 
   if (link_status == GL_FALSE) {
-    int message_length;
-    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &message_length);
-    char* error_message = new char[message_length];
-    glGetProgramInfoLog(programID, message_length, NULL, error_message);
+    int messageLength;
+    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &messageLength);
+    char* errorMessage = new char[messageLength];
+    glGetProgramInfoLog(programID, messageLength, NULL, errorMessage);
 
     // If linking failed, show error message
     std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED" << std::endl;
-    std::cout << error_message << std::endl;
+    std::cout << errorMessage << std::endl;
     return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
 }
 
-static unsigned int compileShader(unsigned int type, const char* source) {
+unsigned int Shader::compileShader(unsigned int type, const char* source) {
   unsigned int id = glCreateShader(type);
   glShaderSource(id, 1, &source, NULL);
   glCompileShader(id);
   return id;
 }
 
-unsigned int generateShaderProgram() {
-  // Get the shader sources using the readShaderFile function
-  std::string vertexShaderSource = readShaderFile("rsc/shaders/basic.vertex.glsl");
-  std::string fragmentShaderSource = readShaderFile("rsc/shaders/basic.fragment.glsl");
+void Shader::free() {
+  glDeleteShader(vertexShaderID);
+  glDeleteShader(fragmentShaderID);
+  glDeleteProgram(programID);
+}
 
-  // Create shaders and programs
-  unsigned int programID = glCreateProgram();
-  unsigned int vertexShaderID = compileShader(GL_VERTEX_SHADER, vertexShaderSource.c_str());
-  unsigned int fragmentShaderID = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource.c_str());
+Shader::Shader(std::string vertexPath, std::string fragmentPath) {
+  // Vertex shader initialization
+  vertexShaderPath = vertexPath;
+  vertexShaderSource = readShaderFile(vertexShaderPath.c_str());
+  vertexShaderID = compileShader(GL_VERTEX_SHADER, vertexShaderSource.c_str());
+
+  // Fragment shader initialization
+  fragmentShaderPath = fragmentPath;
+  fragmentShaderSource = readShaderFile(fragmentShaderPath.c_str());
+  fragmentShaderID = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource.c_str());
+
+  // Create programs
+  programID = glCreateProgram();
 
   // Check if the shaders were successfully created
-  if (shaderCompilationFailed(vertexShaderID, "VERTEX") ||
-      shaderCompilationFailed(fragmentShaderID, "FRAGMENT")) {
-    glDeleteShader(vertexShaderID);
-    glDeleteShader(fragmentShaderID);
-    glDeleteProgram(programID);
-    return 0;
+  if (checkShaderCompilationError(vertexShaderID, "VERTEX") ||
+      checkShaderCompilationError(fragmentShaderID, "FRAGMENT")) {
+    error = true;
+    free();
+    return;
   }
 
   // Attach shaders to the program
@@ -73,11 +82,10 @@ unsigned int generateShaderProgram() {
   glValidateProgram(programID);
 
   // Check if the program was successfully linked
-  if (programLinkFailed(programID)) {
-    glDeleteShader(vertexShaderID);
-    glDeleteShader(fragmentShaderID);
-    glDeleteProgram(programID);
-    return 0;
+  if (checkProgramLinkingError()) {
+    error = true;
+    free();
+    return;
   }
 
   // Delete the shaders as they're linked into
@@ -85,6 +93,33 @@ unsigned int generateShaderProgram() {
   glDeleteShader(vertexShaderID);
   glDeleteShader(fragmentShaderID);
 
-  // Return the program
-  return programID;
+  // Bind the program
+  bind();
+}
+
+Shader::~Shader() { glDeleteProgram(programID); }
+
+void Shader::bind() { glUseProgram(programID); }
+
+void Shader::unbind() { glUseProgram(0); }
+
+void Shader::updateUniform(std::string name, int v0) {
+  int uniformID = glGetUniformLocation(programID, name.c_str());
+  glUniform1i(uniformID, v0);
+}
+void Shader::updateUniform(std::string name, float v0) {
+  int uniformID = glGetUniformLocation(programID, name.c_str());
+  glUniform1f(uniformID, v0);
+}
+void Shader::updateUniform(std::string name, float v0, float v1) {
+  int uniformID = glGetUniformLocation(programID, name.c_str());
+  glUniform2f(uniformID, v0, v1);
+}
+void Shader::updateUniform(std::string name, float v0, float v1, float v2) {
+  int uniformID = glGetUniformLocation(programID, name.c_str());
+  glUniform3f(uniformID, v0, v1, v2);
+}
+void Shader::updateUniform(std::string name, float v0, float v1, float v2, float v3) {
+  int uniformID = glGetUniformLocation(programID, name.c_str());
+  glUniform4f(uniformID, v0, v1, v2, v3);
 }
