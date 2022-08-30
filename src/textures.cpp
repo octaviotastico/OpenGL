@@ -55,7 +55,7 @@ Texture::Texture(std::string path, unsigned int type) {
 Texture::~Texture() { glDeleteTextures(1, &textureID); }
 
 void Texture::bind(unsigned int activeTexture) {
-  glActiveTexture(activeTexture);
+  glActiveTexture(GL_TEXTURE0 + activeTexture);
   glBindTexture(textureType, textureID);
 }
 

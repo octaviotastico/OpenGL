@@ -26,7 +26,7 @@ class Texture {
   Texture(std::string path, unsigned int type = GL_TEXTURE_2D);
   ~Texture();
 
-  void bind(unsigned int activeTexture = GL_TEXTURE0);
+  void bind(unsigned int activeTexture = 0);
   void unbind();
 
   inline unsigned int getID();
