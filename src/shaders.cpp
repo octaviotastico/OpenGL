@@ -125,3 +125,6 @@ void Shader::updateUniform(std::string name, float v0, float v1, float v2) {
 void Shader::updateUniform(std::string name, float v0, float v1, float v2, float v3) {
   glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
 }
+void Shader::updateUniform(std::string name, glm::mat4 matrix, bool transpose) {
+  glUniformMatrix4fv(getUniformLocation(name), 1, transpose, glm::value_ptr(matrix));
+}

@@ -9,6 +9,10 @@
 // Libraries imports
 #include <GLFW/glfw3.h>
 
+#include <GLM/glm.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtc/type_ptr.hpp>
+
 // Local imports
 #include "utils.hpp"
 
@@ -60,6 +64,7 @@ class Shader {
   void updateUniform(std::string name, float v0, float v1);
   void updateUniform(std::string name, float v0, float v1, float v2);
   void updateUniform(std::string name, float v0, float v1, float v2, float v3);
+  void updateUniform(std::string name, glm::mat4 matrix, bool transpose = GL_FALSE);
 };
 
 #endif  // __SHADERS_HPP__
