@@ -108,21 +108,17 @@ int main() {
   */
 
   // Generate a program with the vertex and the fragment shader
-  unsigned int programID = generateShaderProgram();
+  // unsigned int programID = generateShaderProgram();
+  Shader shaderProgram;
 
   // Check if the program was successfully created
-  if (programID == 0) {
+  if (shaderProgram.error) {
     std::cout << "Failed to generate shader program" << std::endl;
     return EXIT_FAILURE;
   }
 
-  // Use the shader program
-  glUseProgram(programID);
-
-  // Get uniform locations
-  int uColor = glGetUniformLocation(programID, "uColor");
+  // Variables for updating uniform uColor
   float red = 1.0f, green = 0.25f, blue = 0.0f;
-  glUniform4f(uColor, red, green, blue, 1.0f);
   float change = 0.01f;
 
   // Game loop
@@ -135,7 +131,7 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Set the color of the rectangle
-    glUniform4f(uColor, red, green, blue, 1.0f);
+    shaderProgram.updateUniform("uColor", red, green, blue, 1.0f);
 
     // Update color
     if (red > 1.0f || red < 0.0f) {
@@ -155,7 +151,7 @@ int main() {
   }
 
   // Clear all resources allocated by GLFW.
-  glDeleteProgram(programID);
+  shaderProgram.free();
   glfwTerminate();
 
   return EXIT_SUCCESS;
