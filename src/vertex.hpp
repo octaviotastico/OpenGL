@@ -28,24 +28,10 @@ class Color {
 
 class TextureCoords {
  public:
-  float texture[3];
-  TextureCoords(float s = 0.0f, float t = 0.0f, float r = 0.0f) {
+  float texture[2];
+  TextureCoords(float s = 0.0f, float t = 0.0f) {
     texture[0] = s;
     texture[1] = t;
-    texture[2] = r;
-  }
-};
-
-// TODO: Finish this class xD
-class Texture {
- public:
-  std::string texture_path;
-  std::vector<TextureCoords> coords;
-
-  Texture(TextureCoords coordsArray[], unsigned int size) {
-    for (unsigned int i = 0; i < size; i++) {
-      coords.push_back(coordsArray[i]);
-    }
   }
 };
 
