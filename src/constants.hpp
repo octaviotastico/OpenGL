@@ -1,11 +1,12 @@
 #ifndef __CONSTANTS_HPP__
 #define __CONSTANTS_HPP__
 
-const int WIDTH = 600;
-const int HEIGHT = 600;
-const char* TITLE = "Heyyy :)";
+#define TITLE "Heyyy :)"
 
-const int MAJOR_VERSION = 3;
-const int MINOR_VERSION = 3;
+#define WIDTH 600
+#define HEIGHT 600
+
+#define MAJOR_VERSION 3
+#define MINOR_VERSION 3
 
 #endif  // __CONSTANTS_HPP__
