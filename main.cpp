@@ -1,3 +1,6 @@
+// Standard Libraries
+#include <iostream>
+
 // Libraries imports
 #include <GLAD/glad.h>   // GLAD: https://github.com/Dav1dde/glad
 #include <GLFW/glfw3.h>  // GLFW: https://es.wikipedia.org/wiki/GLFW
@@ -6,10 +9,8 @@
 #include <GLM/gtc/matrix_transform.hpp>
 #include <GLM/gtc/type_ptr.hpp>
 
-// Standard Libraries
-#include <iostream>
-
 // Local imports
+#include "src/camera.hpp"
 #include "src/constants.hpp"
 #include "src/indexBuffer.hpp"
 #include "src/shaders.hpp"
@@ -24,46 +25,34 @@
 #include "rsc/models/mCube.hpp"
 
 // Camera
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
-glm::vec3 cameraZ = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction of the camera
-glm::vec3 cameraY = glm::vec3(0.0f, 1.0f, 0.0f);   // Up vector of the camera
-glm::vec3 cameraX = glm::cross(cameraZ, cameraY);  // Right vector of the camera
-float fov = 45.0f;
-
-// Euler angles
-float yaw = -90.0f;
-float pitch = 0.0f;
+Camera camera;
 
 // Mouse variables
+bool firstMouse = true;
 double lastX = WIDTH / 2.0;
 double lastY = HEIGHT / 2.0;
 
-// Todo: Clean this up, and send everything to processInput()
+// Time variables
+float deltaTime = 0.0f;  // time between current frame and last frame
+float lastFrame = 0.0f;
+
 void mouseCallback(GLFWwindow* window, double newX, double newY) {
-  float xpos = (float)newX;
-  float ypos = (float)newY;
+  float xPos = (float)newX;
+  float yPos = (float)newY;
 
-  float xoffset = xpos - lastX;
-  float yoffset = lastY - ypos;  // Reversed
-  lastX = xpos;
-  lastY = ypos;
+  if (firstMouse) {
+    lastX = xPos;
+    lastY = yPos;
+    firstMouse = false;
+  }
 
-  float sensitivity = 0.1f;
-  xoffset *= sensitivity;
-  yoffset *= sensitivity;
+  float xOffset = xPos - lastX;
+  float yOffset = lastY - yPos;  // Reversed
 
-  yaw += xoffset;
-  pitch += yoffset;
+  lastX = xPos;
+  lastY = yPos;
 
-  // make sure that when pitch is out of bounds, screen doesn't get flipped
-  if (pitch > 89.0f) pitch = 89.0f;
-  if (pitch < -89.0f) pitch = -89.0f;
-
-  glm::vec3 front;
-  front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-  front.y = sin(glm::radians(pitch));
-  front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-  cameraZ = glm::normalize(front);
+  camera.mouseMovement(xOffset, yOffset);
 }
 
 int main() {
@@ -128,7 +117,7 @@ int main() {
   Shader shaderProgram;
 
   // Check if the program was successfully created
-  if (shaderProgram.error) {
+  if (shaderProgram.error) {  // TODO: Add error checking to vao and vbo too
     std::cout << "Failed to generate shader program" << std::endl;
     return EXIT_FAILURE;
   }
@@ -138,36 +127,34 @@ int main() {
   cubeTexture.bind();
   shaderProgram.updateUniform("uTexture", cubeTexture.getTextureIndex());
 
-  // Testing stuff
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
   // Enable depth (enables the Z-buffer)
   glEnable(GL_DEPTH_TEST);
 
-  // Create transformations matrices
-  glm::mat4 projection = glm::mat4(1.0f);
-  projection = glm::perspective(glm::radians(fov), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-  shaderProgram.updateUniform("uProjection", projection);
+  shaderProgram.updateUniform("uProjection", camera.projection);
 
   // Game loop
   while (!glfwWindowShouldClose(window)) {
-    // Check for the user input
-    processInput(window, &cameraPos, &cameraX, &cameraY, &cameraZ);
+    // Calculate deltatime
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
 
-    // Color for clearing the screen
+    // Process input
+    processInput(window, &camera);
+
+    // Clear the screen
     glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
-    // Clears the screen and the depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Update the cube position
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100), glm::vec3(0.25f, 1.0f, 0.0f));
     shaderProgram.updateUniform("uModel", model);
 
-    // camera/view transformation
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraZ, cameraY);
-    shaderProgram.updateUniform("uCameraView", view);
+    // Update the camera position
+    shaderProgram.updateUniform("uCameraView", camera.cameraView);
 
-    // Draw the triangle
+    // Draw the cube
     glDrawElements(GL_TRIANGLES, modelIndicesCount, GL_UNSIGNED_INT, 0);
 
     // Swap the buffers

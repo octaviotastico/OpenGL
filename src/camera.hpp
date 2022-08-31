@@ -6,7 +6,6 @@
 #include <string>
 
 // Libraries imports
-#include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <GLM/glm.hpp>
@@ -64,6 +63,8 @@ class Camera {
   void moveRight(float deltaTime = 1.0f);
   void moveUp(float deltaTime = 1.0f);
   void moveDown(float deltaTime = 1.0f);
+
+  void mouseMovement(float xOffset, float yOffset);
 
   void activatePolygonMode();
   void deactivatePolygonMode();

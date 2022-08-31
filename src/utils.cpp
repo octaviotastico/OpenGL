@@ -5,21 +5,18 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow* window, glm::vec3* cameraPos, glm::vec3* cameraX, glm::vec3* cameraY,
-                  glm::vec3* cameraZ) {
+void processInput(GLFWwindow* window, Camera* camera) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 
   // Camera movement
-  const float cameraSpeed = 0.05f;
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) (*cameraPos) += (*cameraZ) * cameraSpeed;
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) (*cameraPos) -= (*cameraZ) * cameraSpeed;
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) (*cameraPos) -= (*cameraX) * cameraSpeed;
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) (*cameraPos) += (*cameraX) * cameraSpeed;
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) (*camera).moveForward();
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) (*camera).moveBackward();
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) (*camera).moveLeft();
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) (*camera).moveRight();
 
   // Move up and down
-  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) (*cameraPos) += glm::vec3(0.0f, 0.05f, 0.0f);
-  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-    (*cameraPos) -= glm::vec3(0.0f, 0.05f, 0.0f);
+  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) (*camera).moveUp();
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) (*camera).moveDown();
 }
 
 std::string readShaderFile(const char* filename) {
