@@ -24,9 +24,10 @@
 #include "rsc/models/mCube.hpp"
 
 // Camera
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+glm::vec3 cameraZ = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction of the camera
+glm::vec3 cameraY = glm::vec3(0.0f, 1.0f, 0.0f);   // Up vector of the camera
+glm::vec3 cameraX = glm::cross(cameraZ, cameraY);  // Right vector of the camera
 
 int main() {
   // Create the window
@@ -111,7 +112,7 @@ int main() {
   // Game loop
   while (!glfwWindowShouldClose(window)) {
     // Check for the user input
-    processInput(window, &cameraPos, &cameraFront, &cameraUp);
+    processInput(window, &cameraPos, &cameraX, &cameraY, &cameraZ);
 
     // Color for clearing the screen
     glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
@@ -123,7 +124,7 @@ int main() {
     shaderProgram.updateUniform("uModel", model);
 
     // camera/view transformation
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraZ, cameraY);
     shaderProgram.updateUniform("uCameraView", view);
 
     // Draw the triangle

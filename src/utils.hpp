@@ -17,7 +17,8 @@
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 // Reads all input from the keyboard and mouse, and handles the input events.
-void processInput(GLFWwindow* window, glm::vec3* cameraPos, glm::vec3* cameraFront, glm::vec3* cameraUp);
+void processInput(GLFWwindow* window, glm::vec3* cameraPos, glm::vec3* cameraX, glm::vec3* cameraY,
+                  glm::vec3* cameraZ);
 
 // Reads the contents of a file and returns it as a string.
 std::string readShaderFile(const char* filename);
