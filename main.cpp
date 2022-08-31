@@ -28,6 +28,43 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
 glm::vec3 cameraZ = glm::vec3(0.0f, 0.0f, -1.0f);  // Direction of the camera
 glm::vec3 cameraY = glm::vec3(0.0f, 1.0f, 0.0f);   // Up vector of the camera
 glm::vec3 cameraX = glm::cross(cameraZ, cameraY);  // Right vector of the camera
+float fov = 45.0f;
+
+// Euler angles
+float yaw = -90.0f;
+float pitch = 0.0f;
+
+// Mouse variables
+double lastX = WIDTH / 2.0;
+double lastY = HEIGHT / 2.0;
+
+// Todo: Clean this up, and send everything to processInput()
+void mouseCallback(GLFWwindow* window, double newX, double newY) {
+  float xpos = (float)newX;
+  float ypos = (float)newY;
+
+  float xoffset = xpos - lastX;
+  float yoffset = lastY - ypos;  // Reversed
+  lastX = xpos;
+  lastY = ypos;
+
+  float sensitivity = 0.1f;
+  xoffset *= sensitivity;
+  yoffset *= sensitivity;
+
+  yaw += xoffset;
+  pitch += yoffset;
+
+  // make sure that when pitch is out of bounds, screen doesn't get flipped
+  if (pitch > 89.0f) pitch = 89.0f;
+  if (pitch < -89.0f) pitch = -89.0f;
+
+  glm::vec3 front;
+  front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  front.y = sin(glm::radians(pitch));
+  front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+  cameraZ = glm::normalize(front);
+}
 
 int main() {
   // Create the window
@@ -58,7 +95,11 @@ int main() {
   // Make the context current
   glfwMakeContextCurrent(window);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  glfwSetCursorPosCallback(window, mouseCallback);
   glfwSwapInterval(1);  // Enable vsync
+
+  // Configure input
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   // Initialize GLAD (load all OpenGL function pointers)
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -106,7 +147,7 @@ int main() {
 
   // Create transformations matrices
   glm::mat4 projection = glm::mat4(1.0f);
-  projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+  projection = glm::perspective(glm::radians(fov), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
   shaderProgram.updateUniform("uProjection", projection);
 
   // Game loop
