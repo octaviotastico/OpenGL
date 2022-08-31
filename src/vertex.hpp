@@ -35,11 +35,23 @@ class TextureCoords {
   }
 };
 
+class Normal {
+ public:
+  float normal[3];
+  Normal(float x = 0.0f, float y = 0.0f, float z = 0.0f) {
+    normal[0] = x;
+    normal[1] = y;
+    normal[2] = z;
+  }
+};
+
 class Vertex {
  public:
   Position position;
   Color color;
   TextureCoords textureCoords;
+  // Normal normal;
+
   // Create a new Vertex object.
   Vertex(Position p) { position = p; }
   Vertex(Position p, Color c) {

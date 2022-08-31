@@ -134,10 +134,9 @@ int main() {
   }
 
   // Loading the textures
-  int cubeTexture = 0;
-  Texture texture("rsc/textures/cube.jpg");
-  texture.bind(cubeTexture);
-  shaderProgram.updateUniform("uTexture", cubeTexture);
+  Texture cubeTexture("rsc/textures/cube.jpg");
+  cubeTexture.bind();
+  shaderProgram.updateUniform("uTexture", cubeTexture.getTextureIndex());
 
   // Testing stuff
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

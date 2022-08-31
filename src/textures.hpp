@@ -16,6 +16,7 @@ class Texture {
   std::string texturePath;
   unsigned char* textureBuffer;
   unsigned int textureType;
+  int textureIndex;
 
   // Texture data
   int width;
@@ -23,18 +24,21 @@ class Texture {
   int nChannels;
 
  public:
-  Texture(std::string path, unsigned int type = GL_TEXTURE_2D);
+  Texture(std::string path, unsigned int type = GL_TEXTURE_2D, int index = 0.0f);
   ~Texture();
 
-  void bind(unsigned int activeTexture = 0);
+  void bind();
   void unbind();
 
-  inline unsigned int getID();
   inline unsigned int getWidth();
   inline unsigned int getHeight();
   inline unsigned int getNumberOfChannels();
+
+  inline unsigned int getID();
   inline std::string getPath();
   inline unsigned char* getBuffer();
+  inline unsigned int getTextureType();
+  int getTextureIndex();
 
   inline void setTextureWrapS(unsigned int wrap = GL_REPEAT);
   inline void setTextureWrapT(unsigned int wrap = GL_REPEAT);
