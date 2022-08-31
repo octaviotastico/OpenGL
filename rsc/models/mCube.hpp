@@ -1,3 +1,6 @@
+#ifndef __MCUBE_HPP__
+#define __MCUBE_HPP__
+
 #include "../../src/vertex.hpp"
 
 // Texture coordinates
@@ -73,3 +76,5 @@ unsigned int modelIndices[36] = {
     16, 17, 20,  // Lower triangle
     17, 20, 21,  // Upper triangle
 };
+
+#endif  // __MCUBE_HPP__
