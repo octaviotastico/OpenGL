@@ -23,6 +23,11 @@
 // Models
 #include "rsc/models/mCube.hpp"
 
+// Camera
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
 int main() {
   // Create the window
   GLFWwindow* window = NULL;
@@ -99,21 +104,14 @@ int main() {
   glEnable(GL_DEPTH_TEST);
 
   // Create transformations matrices
-  glm::mat4 view = glm::mat4(1.0f);
   glm::mat4 projection = glm::mat4(1.0f);
-
-  // Rotate it by the Y axis
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-
-  // Send the transformation matrices to the shader
-  shaderProgram.updateUniform("uView", view);
   shaderProgram.updateUniform("uProjection", projection);
 
   // Game loop
   while (!glfwWindowShouldClose(window)) {
     // Check for the user input
-    processInput(window);
+    processInput(window, &cameraPos, &cameraFront, &cameraUp);
 
     // Color for clearing the screen
     glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
@@ -123,6 +121,10 @@ int main() {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100), glm::vec3(0.25f, 1.0f, 0.0f));
     shaderProgram.updateUniform("uModel", model);
+
+    // camera/view transformation
+    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    shaderProgram.updateUniform("uCameraView", view);
 
     // Draw the triangle
     glDrawElements(GL_TRIANGLES, modelIndicesCount, GL_UNSIGNED_INT, 0);

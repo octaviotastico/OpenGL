@@ -9,11 +9,15 @@
 // Libraries imports
 #include <GLFW/glfw3.h>
 
+#include <GLM/glm.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtc/type_ptr.hpp>
+
 // GLFW: Whenever the window size changed (by OS or user resize) this callback function executes
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 // Reads all input from the keyboard and mouse, and handles the input events.
-void processInput(GLFWwindow* window);
+void processInput(GLFWwindow* window, glm::vec3* cameraPos, glm::vec3* cameraFront, glm::vec3* cameraUp);
 
 // Reads the contents of a file and returns it as a string.
 std::string readShaderFile(const char* filename);
