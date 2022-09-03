@@ -3,7 +3,7 @@
 
 #define TITLE "Heyyy :)"
 
-#define WIDTH 600
+#define WIDTH 900
 #define HEIGHT 600
 
 #define MAJOR_VERSION 3
