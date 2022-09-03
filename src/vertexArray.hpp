@@ -29,6 +29,9 @@ class VertexArray {
 
   // Unbind created VertexArray object.
   void unbind();
+
+  // Draw the VertexArray object.
+  void draw(unsigned int count);
 };
 
 #endif  // __VERTEX_ARRAY_HPP__

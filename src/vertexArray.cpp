@@ -35,3 +35,8 @@ void VertexArray::addVertexBufferObject(const VertexBuffer& vbo, const VertexBuf
 void VertexArray::bind() { glBindVertexArray(VAO_ID); }
 
 void VertexArray::unbind() { glBindVertexArray(0); }
+
+void VertexArray::draw(unsigned int count) {
+  bind();
+  glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
+}

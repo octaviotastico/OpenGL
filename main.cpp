@@ -96,46 +96,62 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  // Create a Vertex Array Object
-  VertexArray VAO;
-
-  // Create a Vertex Buffer Object
-  VertexBuffer VBO(modelVertices, sizeof(modelVertices));
-
-  // Create a Vertex Buffer Layout (how to read the VBO)
-  VertexBufferLayout layout(sizeof(Vertex));
-  layout.push(4, GL_FLOAT, offsetof(Vertex, position));       // Position
-  layout.push(4, GL_FLOAT, offsetof(Vertex, color));          // Color
-  layout.push(2, GL_FLOAT, offsetof(Vertex, textureCoords));  // Texture Coords
-
-  VAO.addVertexBufferObject(VBO, layout);
-
-  // Create an Element Buffer Object (index buffer)
-  IndexBuffer IBO(modelIndices, sizeof(modelIndices));
-
+  // SHADERS
   // Generate a program with the vertex and the fragment shader
-  Shader shaderProgram;
+  Shader shaderProgram("rsc/shaders/basic.vertex.glsl", "rsc/shaders/basic.fragment.glsl");
+  Shader lightsProgram("rsc/shaders/light.vertex.glsl", "rsc/shaders/light.fragment.glsl");
 
   // Check if the program was successfully created
-  if (shaderProgram.error) {  // TODO: Add error checking to vao and vbo too
+  if (shaderProgram.error || lightsProgram.error) {
     std::cout << "Failed to generate shader program" << std::endl;
     return EXIT_FAILURE;
   }
 
-  // Loading the textures
+  // CUBE
+  // Create a Vertex Array Object for the cube
+  VertexArray cubeVAO;
+
+  // Create a Vertex Buffer Object
+  VertexBuffer cubeVBO(modelVertices, sizeof(modelVertices));
+
+  // Create a Vertex Buffer Layout (how to read the VBO)
+  VertexBufferLayout cubeLayout(sizeof(Vertex));
+  cubeLayout.push(4, GL_FLOAT, offsetof(Vertex, position));       // Position
+  cubeLayout.push(4, GL_FLOAT, offsetof(Vertex, color));          // Color
+  cubeLayout.push(2, GL_FLOAT, offsetof(Vertex, textureCoords));  // Texture Coords
+
+  // Add the layout to the cube VAO
+  cubeVAO.addVertexBufferObject(cubeVBO, cubeLayout);
+
+  // Create an index buffer object for the cube
+  IndexBuffer cubeIBO(modelIndices, sizeof(modelIndices));
+
+  // Load the textures for the cube
   Texture cubeTexture("rsc/textures/cube.jpg");
   cubeTexture.bind();
   shaderProgram.updateUniform("uTexture", cubeTexture.getTextureIndex());
 
+  // LIGHTS
+  // Create a Vertex Array Object for the light source
+  VertexArray lightVAO;
+
+  // Create a Vertex Buffer Layout (how to read the VBO)
+  VertexBufferLayout lightLayout(sizeof(Vertex));
+  lightLayout.push(4, GL_FLOAT, offsetof(Vertex, position));
+
+  // Add the layout to the light VAO
+  lightVAO.addVertexBufferObject(cubeVBO, lightLayout);
+
+  // Create an index buffer object for the light source
+  IndexBuffer lightIBO(modelIndices, sizeof(modelIndices));
+
   // Enable depth (enables the Z-buffer)
   glEnable(GL_DEPTH_TEST);
-
-  shaderProgram.updateUniform("uProjection", camera.projection);
 
   // Game loop
   while (!glfwWindowShouldClose(window)) {
     // Calculate deltatime
-    float currentFrame = glfwGetTime();
+    float currentFrame = (float)glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
@@ -146,16 +162,39 @@ int main() {
     glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // ----- DRAW THE CUBE ----- //
+
     // Update the cube position
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100), glm::vec3(0.25f, 1.0f, 0.0f));
+
+    // Update the shaders
+    cubeTexture.bind();
+    shaderProgram.bind();
+    shaderProgram.updateUniform("uProjection", camera.projection);
+    shaderProgram.updateUniform("uCameraView", camera.cameraView);
     shaderProgram.updateUniform("uModel", model);
 
-    // Update the camera position
-    shaderProgram.updateUniform("uCameraView", camera.cameraView);
-
     // Draw the cube
-    glDrawElements(GL_TRIANGLES, modelIndicesCount, GL_UNSIGNED_INT, 0);
+    cubeVAO.draw(modelIndicesCount);
+
+    // ----- DRAW THE LIGHTS ----- //
+
+    // Update the lights position
+    glm::mat4 lightsModel = glm::mat4(1.0f);
+    lightsModel = glm::translate(lightsModel, glm::vec3(2.0f, 1.0f, 3.0f));
+    lightsModel = glm::scale(lightsModel, glm::vec3(0.25f));
+
+    // Update the shaders
+    lightsProgram.bind();
+    lightsProgram.updateUniform("uProjection", camera.projection);
+    lightsProgram.updateUniform("uCameraView", camera.cameraView);
+    lightsProgram.updateUniform("uModel", lightsModel);
+
+    // Draw the lights
+    lightVAO.draw(modelIndicesCount);
+
+    // ---------- //
 
     // Swap the buffers
     glfwSwapBuffers(window);
@@ -166,6 +205,7 @@ int main() {
 
   // Clear all resources allocated by GLFW.
   shaderProgram.free();
+  lightsProgram.free();
   glfwTerminate();
 
   return EXIT_SUCCESS;
