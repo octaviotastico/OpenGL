@@ -13,39 +13,39 @@ Vertex modelVertices[24] = {
 
     // -------- Front and Back ------- //
 
-    Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}),
-    Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}),
-    Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}),
-    Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}),
+    Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}, Normal{0.0f, 0.0f, -1.0f}),
+    Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}, Normal{0.0f, 0.0f, -1.0f}),
+    Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}, Normal{0.0f, 0.0f, -1.0f}),
+    Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}, Normal{0.0f, 0.0f, -1.0f}),
 
-    Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}),
-    Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}),
-    Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}),
-    Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}),
+    Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}, Normal{0.0f, 0.0f, 1.0f}),
+    Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}, Normal{0.0f, 0.0f, 1.0f}),
+    Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}, Normal{0.0f, 0.0f, 1.0f}),
+    Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}, Normal{0.0f, 0.0f, 1.0f}),
 
     // -------- Left and Right ------- //
 
-    Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}),
-    Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}),
-    Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}),
-    Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}),
+    Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}, Normal{-1.0f, 0.0f, 0.0f}),
+    Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}, Normal{-1.0f, 0.0f, 0.0f}),
+    Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}, Normal{-1.0f, 0.0f, 0.0f}),
+    Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}, Normal{-1.0f, 0.0f, 0.0f}),
 
-    Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}),
-    Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}),
-    Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}),
-    Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}),
+    Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[0], 0.0f}, Normal{1.0f, 0.0f, 0.0f}),
+    Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[1], 0.0f}, Normal{1.0f, 0.0f, 0.0f}),
+    Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{side[1], 1.0f}, Normal{1.0f, 0.0f, 0.0f}),
+    Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{side[0], 1.0f}, Normal{1.0f, 0.0f, 0.0f}),
 
     // -------- Top and Bottom ------- //
 
-    Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{dirt[0], 0.0f}),
-    Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{dirt[1], 0.0f}),
-    Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{grass[1], 0.0f}),
-    Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{grass[0], 0.0f}),
+    Vertex(Position{-0.5f, -0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{dirt[0], 0.0f}, Normal{0.0f, -1.0f, 0.0f}),
+    Vertex(Position{+0.5f, -0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{dirt[1], 0.0f}, Normal{0.0f, -1.0f, 0.0f}),
+    Vertex(Position{+0.5f, +0.5f, -0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{grass[1], 0.0f}, Normal{0.0f, -1.0f, 0.0f}),
+    Vertex(Position{-0.5f, +0.5f, -0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{grass[0], 0.0f}, Normal{0.0f, -1.0f, 0.0f}),
 
-    Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{dirt[0], 1.0f}),
-    Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{dirt[1], 1.0f}),
-    Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{grass[1], 1.0f}),
-    Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{grass[0], 1.0f}),
+    Vertex(Position{-0.5f, -0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{dirt[0], 1.0f}, Normal{0.0f, 1.0f, 0.0f}),
+    Vertex(Position{+0.5f, -0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{dirt[1], 1.0f}, Normal{0.0f, 1.0f, 0.0f}),
+    Vertex(Position{+0.5f, +0.5f, +0.5f}, Color{1.0f, 0.0f, 1.0f}, TextureCoords{grass[1], 1.0f}, Normal{0.0f, 1.0f, 0.0f}),
+    Vertex(Position{-0.5f, +0.5f, +0.5f}, Color{0.0f, 0.0f, 1.0f}, TextureCoords{grass[0], 1.0f}, Normal{0.0f, 1.0f, 0.0f}),
 
 };
 

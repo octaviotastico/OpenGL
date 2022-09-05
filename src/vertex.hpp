@@ -50,7 +50,7 @@ class Vertex {
   Position position;
   Color color;
   TextureCoords textureCoords;
-  // Normal normal;
+  Normal normal;
 
   // Create a new Vertex object.
   Vertex(Position p) { position = p; }
@@ -62,6 +62,12 @@ class Vertex {
     position = p;
     color = c;
     textureCoords = t;
+  }
+  Vertex(Position p, Color c, TextureCoords t, Normal n) {
+    position = p;
+    color = c;
+    textureCoords = t;
+    normal = n;
   }
 };
 
