@@ -13,6 +13,7 @@
 #include "src/camera.hpp"
 #include "src/constants.hpp"
 #include "src/indexBuffer.hpp"
+#include "src/lights.hpp"
 #include "src/shaders.hpp"
 #include "src/textures.hpp"
 #include "src/utils.hpp"
@@ -96,7 +97,6 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  // SHADERS
   // Generate a program with the vertex and the fragment shader
   Shader shaderProgram("rsc/shaders/basic.vertex.glsl", "rsc/shaders/basic.fragment.glsl");
   Shader lightsProgram("rsc/shaders/light.vertex.glsl", "rsc/shaders/light.fragment.glsl");
@@ -119,6 +119,7 @@ int main() {
   cubeLayout.push(4, GL_FLOAT, offsetof(Vertex, position));       // Position
   cubeLayout.push(4, GL_FLOAT, offsetof(Vertex, color));          // Color
   cubeLayout.push(2, GL_FLOAT, offsetof(Vertex, textureCoords));  // Texture Coords
+  cubeLayout.push(3, GL_FLOAT, offsetof(Vertex, normal));         // Normal
 
   // Add the layout to the cube VAO
   cubeVAO.addVertexBufferObject(cubeVBO, cubeLayout);
@@ -144,6 +145,9 @@ int main() {
 
   // Create an index buffer object for the light source
   IndexBuffer lightIBO(modelIndices, sizeof(modelIndices));
+
+  // Light Source
+  LightSource lightSource(&shaderProgram);
 
   // Enable depth (enables the Z-buffer)
   glEnable(GL_DEPTH_TEST);
@@ -174,6 +178,12 @@ int main() {
     shaderProgram.updateUniform("uProjection", camera.projection);
     shaderProgram.updateUniform("uCameraView", camera.cameraView);
     shaderProgram.updateUniform("uModel", model);
+
+    // TODO: Take this out, if the light does not change position or colors/intensities.
+    lightSource.setAmbientColor(0.5608f, 0.7843f, 0.9647f, 0.1f);
+    lightSource.setDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+    lightSource.setSpecularColor(1.0f, 1.0f, 1.0f, 32.0f, 0.8f);
+    lightSource.setPosition(2.0f, 1.0f, 3.0f);
 
     // Draw the cube
     cubeVAO.draw(modelIndicesCount);

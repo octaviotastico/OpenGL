@@ -65,6 +65,7 @@ class Shader {
   void updateUniform(std::string name, float v0, float v1, float v2);
   void updateUniform(std::string name, float v0, float v1, float v2, float v3);
   void updateUniform(std::string name, glm::mat4 matrix, bool transpose = GL_FALSE);
+  void updateUniform(std::string name, glm::vec3 vector);
 };
 
 #endif  // __SHADERS_HPP__
