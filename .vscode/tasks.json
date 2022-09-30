@@ -14,6 +14,9 @@
         "-I${workspaceFolder}/dependencies/include",
         "-L${workspaceFolder}/dependencies/library",
 
+        "${workspaceFolder}/dependencies/library/libassimp.dylib",
+        "${workspaceFolder}/dependencies/library/libassimp.5.dylib",
+        "${workspaceFolder}/dependencies/library/libassimp.5.2.5.dylib",
         "${workspaceFolder}/dependencies/library/libglfw.3.3.dylib",
         "${workspaceFolder}/dependencies/library/glad.c",
         "${workspaceFolder}/dependencies/library/stb_image.c",
