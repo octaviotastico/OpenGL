@@ -1,6 +1,9 @@
 #ifndef __INDEX_BUFFER_HPP__
 #define __INDEX_BUFFER_HPP__
 
+// Standard Libraries
+#include <vector>
+
 // Libraries imports
 #include <GLFW/glfw3.h>
 
@@ -10,8 +13,12 @@ class IndexBuffer {
   unsigned int size;
 
  public:
-  IndexBuffer(const void* data, unsigned int size);
+  IndexBuffer();
+  IndexBuffer(const void* data, unsigned int sz);
   ~IndexBuffer();
+
+  void setup(const void* data, unsigned int sz);
+  void setup(std::vector<unsigned int>& data);
 
   void bind() const;
   void unbind() const;
