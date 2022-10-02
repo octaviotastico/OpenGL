@@ -103,6 +103,8 @@ void Shader::bind() { glUseProgram(programID); }
 
 void Shader::unbind() { glUseProgram(0); }
 
+unsigned int Shader::getID() { return programID; }
+
 int Shader::getUniformLocation(std::string name) {
   if (uniforms.count(name) == 0) {
     uniforms[name] = glGetUniformLocation(programID, name.c_str());

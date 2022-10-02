@@ -1,5 +1,7 @@
 #include "textures.hpp"
 
+unsigned int globalIndex = 0;
+
 /*
   Texture wrapping modes:
   GL_REPEAT
@@ -18,16 +20,26 @@
   GL_LINEAR_MIPMAP_LINEAR
 */
 
-Texture::Texture(std::string path, unsigned int type, int index) {
+Texture::Texture(std::string path, unsigned int type, std::string typeStr, int index, unsigned int d) {
   // Load the texture
   texturePath = path;
   textureType = type;
+  textureTypeStr = typeStr;
+  textureDimension = d;
   textureIndex = index;
   stbi_set_flip_vertically_on_load(true);
   textureBuffer = stbi_load(path.c_str(), &width, &height, &nChannels, 4);
+
+  // Check if the texture was loaded
   if (textureBuffer == NULL) {
     std::cout << "Failed to load texture: " << path << std::endl;
     return;
+  }
+
+  // Check if the texture index was specified
+  if (textureIndex == -1) {
+    textureIndex = globalIndex;
+    globalIndex++;
   }
 
   // Generate the texture
@@ -55,22 +67,29 @@ Texture::Texture(std::string path, unsigned int type, int index) {
 
 Texture::~Texture() { glDeleteTextures(1, &textureID); }
 
-void Texture::bind() {
+void Texture::bind() { glBindTexture(textureType, textureID); }
+void Texture::unbind() { glBindTexture(textureType, 0); }
+
+void Texture::activate() { glActiveTexture(GL_TEXTURE0 + textureIndex); }
+
+void Texture::deactivate() { glActiveTexture(GL_TEXTURE0); }
+
+void Texture::bindAndActive() {
   glActiveTexture(GL_TEXTURE0 + textureIndex);
   glBindTexture(textureType, textureID);
 }
-
-void Texture::unbind() { glBindTexture(textureType, 0); }
 
 inline unsigned int Texture::getWidth() { return width; }
 inline unsigned int Texture::getHeight() { return height; }
 inline unsigned int Texture::getNumberOfChannels() { return nChannels; }
 
-inline unsigned int Texture::getID() { return textureID; }
-inline std::string Texture::getPath() { return texturePath; }
-inline unsigned char* Texture::getBuffer() { return textureBuffer; }
-inline unsigned int Texture::getTextureType() { return textureType; }
 int Texture::getTextureIndex() { return textureIndex; }
+unsigned int Texture::getTextureID() { return textureID; }
+std::string Texture::getPath() { return texturePath; }
+inline unsigned char* Texture::getBuffer() { return textureBuffer; }
+inline unsigned int Texture::getDimension() { return textureDimension; }
+inline unsigned int Texture::getType() { return textureType; }
+std::string Texture::getTypeStr() { return textureTypeStr; }
 
 void Texture::setTextureWrapS(unsigned int wrap) {
   glBindTexture(textureType, textureID);

@@ -55,6 +55,9 @@ class Shader {
   void bind();
   void unbind();
 
+  // Get the shader ID
+  unsigned int getID();
+
   // Free the shader program
   void free();
 
