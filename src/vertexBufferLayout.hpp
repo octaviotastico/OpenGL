@@ -25,6 +25,7 @@ class VertexBufferLayout {
 
  public:
   // Create a new VertexBufferLayout object.
+  VertexBufferLayout() : stride(0) {}
   VertexBufferLayout(unsigned int stride) : stride(stride) {}
 
   // Delete created VertexBufferLayout object.
@@ -49,6 +50,9 @@ class VertexBufferLayout {
 
   // Get the stride of the VertexBufferLayout.
   inline const unsigned int getStride() const { return stride; }
+
+  // Set the stride of the VertexBufferLayout.
+  inline void setStride(unsigned int s) { stride = s; }
 
   // Get the elements of the VertexBufferLayout.
   inline const std::vector<VertexBufferElement>& getElements() const { return elements; }
