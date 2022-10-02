@@ -1,5 +1,7 @@
 #include "indexBuffer.hpp"
 
+IndexBuffer::IndexBuffer() {}
+
 IndexBuffer::IndexBuffer(const void* indices, unsigned int sz) { setup(indices, sz); }
 
 IndexBuffer::~IndexBuffer() { glDeleteBuffers(1, &EBO_ID); }
