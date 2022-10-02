@@ -1,5 +1,7 @@
 #include "vertexBuffer.hpp"
 
+VertexBuffer::VertexBuffer() {}
+
 VertexBuffer::VertexBuffer(const void* vertices, unsigned int size) { setup(vertices, size); }
 
 VertexBuffer::VertexBuffer(std::vector<Vertex>& vertices) { setup(vertices); }

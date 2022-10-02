@@ -96,7 +96,7 @@ class Vertex {
   float m_Weights[MAX_BONE_INFLUENCE];  // Weights from each bone
 
   // Create a new Vertex object.
-  Vertex();
+  Vertex() {}
   Vertex(Position p) { position = p; }
   Vertex(Position p, Color c) {
     position = p;
