@@ -1,6 +1,7 @@
 #ifndef __VERTEX_HPP__
 #define __VERTEX_HPP__
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -127,6 +128,21 @@ class Vertex {
     normal = n;
     tangent = tan;
     bitangent = bitan;
+  }
+
+  void print() {
+    std::cout << "Position: " << position.position[0] << ", " << position.position[1] << ", "
+              << position.position[2] << ", " << position.position[3] << std::endl;
+    std::cout << "Color: " << color.color[0] << ", " << color.color[1] << ", " << color.color[2] << ", "
+              << color.color[3] << std::endl;
+    std::cout << "Texture Coords: " << textureCoords.texture[0] << ", " << textureCoords.texture[1]
+              << std::endl;
+    std::cout << "Normal: " << normal.normal[0] << ", " << normal.normal[1] << ", " << normal.normal[2]
+              << std::endl;
+    std::cout << "Tangent: " << tangent.tangent[0] << ", " << tangent.tangent[1] << ", "
+              << tangent.tangent[2] << std::endl;
+    std::cout << "Bitangent: " << bitangent.bitangent[0] << ", " << bitangent.bitangent[1] << ", "
+              << bitangent.bitangent[2] << std::endl;
   }
 };
 

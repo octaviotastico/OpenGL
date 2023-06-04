@@ -11,13 +11,13 @@
 #include "vertex.hpp"
 
 class VertexBuffer {
- private:
+ public:
+  // ID of the buffer
   unsigned int VBO_ID;
 
- public:
   // Create a new VertexBuffer object.
   VertexBuffer();
-  VertexBuffer(std::vector<Vertex>& data);
+  VertexBuffer(std::vector<Vertex> data);
   VertexBuffer(const void* data, unsigned int size);
   // Delete created VertexBuffer object.
   ~VertexBuffer();
@@ -29,7 +29,7 @@ class VertexBuffer {
 
   // Setup VertexBuffer object.
   void setup(const void* data, unsigned int size);
-  void setup(std::vector<Vertex>& data);
+  void setup(std::vector<Vertex> data);
 };
 
 #endif  // __VERTEX_BUFFER_HPP__

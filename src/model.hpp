@@ -3,13 +3,13 @@
 
 // Standard Libraries
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 #include <vector>
 
 // Libraries imports
 #include <GLAD/glad.h>
-#include <STB/stb_image.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
@@ -18,6 +18,7 @@
 #include <assimp/Importer.hpp>
 
 // Local imports
+#include "errors.hpp"
 #include "mesh.hpp"
 #include "shaders.hpp"
 #include "textures.hpp"
@@ -36,7 +37,7 @@ class Model {
  private:
   // Stores all the textures loaded so far, optimization to
   // make sure textures aren't loaded more than once.
-  std::vector<Texture> textures_loaded;
+  std::map<std::string, bool> textures_loaded;
   std::vector<Mesh> meshes;
   bool gammaCorrection;
 

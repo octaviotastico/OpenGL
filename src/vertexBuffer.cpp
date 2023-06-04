@@ -4,7 +4,7 @@ VertexBuffer::VertexBuffer() {}
 
 VertexBuffer::VertexBuffer(const void* vertices, unsigned int size) { setup(vertices, size); }
 
-VertexBuffer::VertexBuffer(std::vector<Vertex>& vertices) { setup(vertices); }
+VertexBuffer::VertexBuffer(std::vector<Vertex> vertices) { setup(vertices); }
 
 VertexBuffer::~VertexBuffer() { glDeleteBuffers(1, &VBO_ID); }
 
@@ -18,6 +18,6 @@ void VertexBuffer::setup(const void* vertices, unsigned int size) {
   glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
-void VertexBuffer::setup(std::vector<Vertex>& vertices) {
+void VertexBuffer::setup(std::vector<Vertex> vertices) {
   setup(&vertices[0], vertices.size() * sizeof(Vertex));
 }

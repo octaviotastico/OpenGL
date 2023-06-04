@@ -12,6 +12,7 @@
 // Local imports
 #include "src/camera.hpp"
 #include "src/constants.hpp"
+#include "src/errors.hpp"
 #include "src/indexBuffer.hpp"
 #include "src/lights.hpp"
 #include "src/model.hpp"
@@ -100,42 +101,28 @@ int main() {
 
   // Generate a program with the vertex and the fragment shader
   Shader shaderProgram("rsc/shaders/basic.vertex.glsl", "rsc/shaders/basic.fragment.glsl");
-  Shader lightsProgram("rsc/shaders/light.vertex.glsl", "rsc/shaders/light.fragment.glsl");
 
   // Check if the program was successfully created
-  if (shaderProgram.error || lightsProgram.error) {
+  if (shaderProgram.error) {
     std::cout << "Failed to generate shader program" << std::endl;
     return EXIT_FAILURE;
   }
 
   // MODEL
   Model planet("rsc/models/planet/planet.obj");
-
-  // // LIGHTS
-  // // Create a Vertex Array Object for the light source
-  // VertexArray lightVAO;
-
-  // // Create a Vertex Buffer Layout (how to read the VBO)
-  // VertexBufferLayout lightLayout(sizeof(Vertex));
-  // lightLayout.push(4, GL_FLOAT, offsetof(Vertex, position));
-
-  // // Add the layout to the light VAO
-  // lightVAO.addVertexBufferObject(cubeVBO, lightLayout);
-
-  // // Create an index buffer object for the light source
-  // IndexBuffer lightIBO(modelIndices, sizeof(modelIndices));
-
-  // // Light Source
-  // LightSource lightSource(&shaderProgram);
+  glCheckError();
 
   // Enable depth (enables the Z-buffer)
   glEnable(GL_DEPTH_TEST);
+  glCheckError();
 
   // Draw in wireframe mode
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   // Game loop
   while (!glfwWindowShouldClose(window)) {
+    glCheckError();
+
     // Calculate deltatime
     float currentFrame = (float)glfwGetTime();
     deltaTime = currentFrame - lastFrame;
@@ -143,57 +130,38 @@ int main() {
 
     // Process input
     processInput(window, &camera);
+    glCheckError();
 
     // Clear the screen
     glClearColor(0.2f, 0.0f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // ----- DRAW THE CUBE ----- //
+    glCheckError();
 
     // Update the cube position
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians((float)glfwGetTime() * 100), glm::vec3(0.25f, 1.0f, 0.0f));
+
+    // translate it down so it's at the center of the scene
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    // it's a bit too big for our scene, so scale it down
+    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
     // Update the shaders
-    // cubeTexture.bind();
     shaderProgram.bind();
     shaderProgram.updateUniform("uProjection", camera.projection);
     shaderProgram.updateUniform("uCameraView", camera.cameraView);
     shaderProgram.updateUniform("uModel", model);
+    glCheckError();
 
-    // // TODO: Take this out, if the light does not change position or colors/intensities.
-    // lightSource.setAmbientColor(0.5608f, 0.7843f, 0.9647f, 0.1f);
-    // lightSource.setDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-    // lightSource.setSpecularColor(1.0f, 1.0f, 1.0f, 32.0f, 0.8f);
-    // lightSource.setPosition(2.0f, 1.0f, 3.0f);
-
-    // Draw the cube
-    // cubeVAO.draw(modelIndicesCount);
     planet.Draw(shaderProgram);
-
-    // ----- DRAW THE LIGHTS ----- //
-
-    // // Update the lights position
-    // glm::mat4 lightsModel = glm::mat4(1.0f);
-    // lightsModel = glm::translate(lightsModel, glm::vec3(2.0f, 1.0f, 3.0f));
-    // lightsModel = glm::scale(lightsModel, glm::vec3(0.25f));
-
-    // // Update the shaders
-    lightsProgram.bind();
-    lightsProgram.updateUniform("uProjection", camera.projection);
-    lightsProgram.updateUniform("uCameraView", camera.cameraView);
-    // lightsProgram.updateUniform("uModel", lightsModel);
-
-    // // Draw the lights
-    // lightVAO.draw(modelIndicesCount);
-
-    // ---------- //
+    glCheckError();
 
     // Swap the buffers
     glfwSwapBuffers(window);
+    glCheckError();
 
     // Poll for events
     glfwPollEvents();
+    glCheckError();
   }
 
   // Clear all resources allocated by GLFW.

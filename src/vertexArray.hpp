@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 // Local imports
+#include "errors.hpp"
 #include "vertex.hpp"
 #include "vertexBuffer.hpp"
 #include "vertexBufferLayout.hpp"

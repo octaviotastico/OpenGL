@@ -10,6 +10,9 @@
 #include <GLFW/glfw3.h>
 #include <STB/stb_image.h>  // STB: https://github.com/nothings/stb/raw/master/stb_image.h
 
+// Local imports
+#include "errors.hpp"
+
 class Texture {
  private:
   int textureIndex;
@@ -26,8 +29,8 @@ class Texture {
   int nChannels;
 
  public:
-  Texture(std::string path, unsigned int type = 0, std::string typeStr = "", int index = -1,
-          unsigned int d = GL_TEXTURE_2D);
+  Texture(std::string _texturePath, unsigned int _textureType = 0, std::string _textureTypeStr = "",
+          int _textureIndex = -1, unsigned int _textureDimension = GL_TEXTURE_2D);
   ~Texture();
 
   void bind();

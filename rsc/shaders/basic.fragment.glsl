@@ -8,7 +8,11 @@ in vec3 normals;
 layout(location = 0)out vec4 color;
 
 // Global variables
-uniform sampler2D uTexture;
+// Textures
+uniform sampler2D texture_diffuse_0;
+uniform sampler2D texture_specular_0;
+uniform sampler2D texture_normal_0;
+uniform sampler2D texture_height_0;
 
 // Light variables
 // -> Ambient light
@@ -41,6 +45,9 @@ void main()
   vec3 specular = uLightSpecularColor * uLightSpecularIntensity * spec;
   
   // Texture fetch
-  vec4 texColor = texture(uTexture, textureCoords);
-  color = texColor * vec4(ambient + diffuse + specular, 1.0);
+  vec4 texColor = texture(texture_diffuse_0, textureCoords);
+  // color = texColor * vec4(ambient + diffuse + specular, 1.0);
+  
+  // Just to debug (only ambient)
+  color = texColor;
 }

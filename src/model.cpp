@@ -3,6 +3,7 @@
 Model::Model(std::string path, bool gamma) {
   gammaCorrection = gamma;
   loadModel(path);
+  glCheckError();
 }
 
 void Model::loadModel(std::string path) {
@@ -19,9 +20,13 @@ void Model::loadModel(std::string path) {
 
   // Process ASSIMP's root node recursively.
   processNode(scene->mRootNode, scene);
+  glCheckError();
 }
 
 void Model::processNode(aiNode *node, const aiScene *scene) {
+  // std::cout << "-> Processing node: " << node->mName.C_Str() << std::endl;
+  // std::cout << "Number of meshes: " << node->mNumMeshes << std::endl;
+
   // Process each mesh located at the current node.
   for (unsigned int i = 0; i < node->mNumMeshes; i++) {
     // The node object only contains indices to index the actual objects in the scene.
@@ -31,9 +36,12 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
     meshes.push_back(processMesh(mesh, scene));
   }
 
+  // std::cout << "Number of children: " << node->mNumChildren << std::endl;
+
   // After we've processed all of the meshes (if any) we then recursively process each
   // of the children nodes
   for (unsigned int i = 0; i < node->mNumChildren; i++) {
+    std::cout << std::endl;
     processNode(node->mChildren[i], scene);
   }
 }
@@ -43,6 +51,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
   std::vector<Texture> textures;
+
+  // std::cout << "-> Processing mesh: " << mesh->mName.C_Str() << std::endl;
+  // std::cout << "Number of vertices: " << mesh->mNumVertices << std::endl;
 
   // Walk through each of the mesh's vertices
   for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -73,6 +84,8 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
     vertices.push_back(vertex);
   }
+
+  // std::cout << "Number of faces: " << mesh->mNumFaces << std::endl;
 
   // Now walk through each of the mesh's faces and retrieve the corresponding vertex indices.
   for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
@@ -107,6 +120,8 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
       loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
   textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
+  glCheckError();
+
   // Return a mesh object created from the extracted mesh data
   return Mesh(vertices, indices, textures);
 }
@@ -115,33 +130,23 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
                                                  std::string typeName) {
   std::vector<Texture> textures;
   for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-    aiString str;
-    mat->GetTexture(type, i, &str);
-    // Check if texture was loaded before and if so, continue to next iteration:
-    // skip loading a new texture
-    bool skip = false;
-
-    // TODO: Improve this by using a MAP instead of a for loop.
-    for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-      if (std::strcmp(textures_loaded[j].getPath().c_str(), str.C_Str()) == 0) {
-        textures.push_back(textures_loaded[j]);
-        // A texture with the same filepath has already been loaded, continue
-        // to next one. (optimization)
-        skip = true;
-
-        break;
-      }
-    }
+    aiString texture_path;
+    mat->GetTexture(type, i, &texture_path);
+    glCheckError();
 
     // If texture hasn't been loaded already, load it
-    if (!skip) {
-      Texture texture(str.C_Str(), type, typeName);  // TODO: Check str.C_Str() is correct
+    if (!textures_loaded[texture_path.C_Str()]) {
+      // std::cout << "Loading texture: " << texture_path.C_Str() << std::endl;
+      Texture texture(texture_path.C_Str(), type, typeName);
+      // glCheckError();
       textures.push_back(texture);
-      // Store it as texture loaded for entire model, to
-      // ensure we won't unnecesery load duplicate textures.
-      textures_loaded.push_back(texture);
+      // glCheckError();
+      textures_loaded[texture_path.C_Str()] = true;
+      // glCheckError();
     }
   }
+
+  glCheckError();
 
   return textures;
 }
