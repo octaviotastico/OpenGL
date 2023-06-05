@@ -1,4 +1,5 @@
 #version 330 core
+
 // Input variables
 in vec4 vertexColors;
 in vec2 textureCoords;
