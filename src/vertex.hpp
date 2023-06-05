@@ -52,20 +52,27 @@ class Vertex {
   TextureCoords textureCoords;
   Normal normal;
 
-  // Create a new Vertex object.
+  // Position Only
   Vertex(Position p) { position = p; }
+  // Position and Color
   Vertex(Position p, Color c) {
     position = p;
     color = c;
   }
-  Vertex(Position p, Color c, TextureCoords t) {
+  // Position and Texture Coordinates
+  Vertex(Position p, TextureCoords t) {
     position = p;
-    color = c;
     textureCoords = t;
   }
-  Vertex(Position p, Color c, TextureCoords t, Normal n) {
+  // Position, Color and Normal
+  Vertex(Position p, Color c, Normal n) {
     position = p;
     color = c;
+    normal = n;
+  }
+  // Position, Texture Coordinates and Normal
+  Vertex(Position p, TextureCoords t, Normal n) {
+    position = p;
     textureCoords = t;
     normal = n;
   }
