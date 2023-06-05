@@ -180,7 +180,7 @@ int main() {
     shaderProgram.updateUniform("uModel", model);
 
     // TODO: Take this out, if the light does not change position or colors/intensities.
-    lightSource.setAmbientColor(0.5608f, 0.7843f, 0.9647f, 0.1f);
+    lightSource.setAmbientColor(1.0f, 1.0f, 1.0f, 0.2f);
     lightSource.setDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
     lightSource.setSpecularColor(1.0f, 1.0f, 1.0f, 32.0f, 0.8f);
     lightSource.setPosition(2.0f, 1.0f, 3.0f);
