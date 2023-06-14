@@ -2,7 +2,7 @@
 #define __INDEX_BUFFER_HPP__
 
 // Libraries imports
-#include <GLFW/glfw3.h>
+#include "../dependencies/include/GLFW/glfw3.h"
 
 class IndexBuffer {
  private:

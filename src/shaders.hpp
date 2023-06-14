@@ -7,11 +7,10 @@
 #include <string>
 
 // Libraries imports
-#include <GLFW/glfw3.h>
-
-#include <GLM/glm.hpp>
-#include <GLM/gtc/matrix_transform.hpp>
-#include <GLM/gtc/type_ptr.hpp>
+#include "../dependencies/include/GLFW/glfw3.h"
+#include "../dependencies/include/GLM/glm.hpp"
+#include "../dependencies/include/GLM/gtc/matrix_transform.hpp"
+#include "../dependencies/include/GLM/gtc/type_ptr.hpp"
 
 // Local imports
 #include "utils.hpp"
@@ -47,8 +46,7 @@ class Shader {
   bool error = false;
 
   // Constructor and destructor
-  Shader(std::string vertexPath = "rsc/shaders/basic.vertex.glsl",
-         std::string fragmentPath = "rsc/shaders/basic.fragment.glsl");
+  Shader(std::string vertexPath = "rsc/shaders/basic.vertex.glsl", std::string fragmentPath = "rsc/shaders/basic.fragment.glsl");
   ~Shader();
 
   // Bind and unbind the shader

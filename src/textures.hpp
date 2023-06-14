@@ -6,9 +6,9 @@
 #include <string>
 
 // Libraries imports
-#include <GLAD/glad.h>
-#include <GLFW/glfw3.h>
-#include <STB/stb_image.h>  // STB: https://github.com/nothings/stb/raw/master/stb_image.h
+#include "../dependencies/include/GLAD/glad.h"
+#include "../dependencies/include/GLFW/glfw3.h"
+#include "../dependencies/include/STB/stb_image.h"  // STB: https://github.com/nothings/stb/raw/master/stb_image.h
 
 class Texture {
  private:

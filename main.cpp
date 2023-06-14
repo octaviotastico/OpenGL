@@ -2,12 +2,11 @@
 #include <iostream>
 
 // Libraries imports
-#include <GLAD/glad.h>   // GLAD: https://github.com/Dav1dde/glad
-#include <GLFW/glfw3.h>  // GLFW: https://es.wikipedia.org/wiki/GLFW
-
-#include <GLM/glm.hpp>  // GLM: https://github.com/g-truc/glm
-#include <GLM/gtc/matrix_transform.hpp>
-#include <GLM/gtc/type_ptr.hpp>
+#include "dependencies/include/GLAD/glad.h"   // GLAD: https://github.com/Dav1dde/glad
+#include "dependencies/include/GLFW/glfw3.h"  // GLFW: https://es.wikipedia.org/wiki/GLFW
+#include "dependencies/include/GLM/glm.hpp"   // GLM: https://github.com/g-truc/glm
+#include "dependencies/include/GLM/gtc/matrix_transform.hpp"
+#include "dependencies/include/GLM/gtc/type_ptr.hpp"
 
 // Local imports
 #include "src/camera.hpp"
@@ -21,15 +20,19 @@
 #include "src/vertexArray.hpp"
 #include "src/vertexBuffer.hpp"
 #include "src/vertexBufferLayout.hpp"
+#include "src/window.hpp"
 
 // Models
 #include "rsc/models/mCube.hpp"
+
+// Window
+GLFWwindow* window = NULL;
 
 // Camera
 Camera camera;
 
 // Mouse variables
-bool firstMouse = true;
+bool firstMouseMovement = true;
 double lastX = WIDTH / 2.0;
 double lastY = HEIGHT / 2.0;
 
@@ -38,49 +41,15 @@ float deltaTime = 0.0f;  // time between current frame and last frame
 float lastFrame = 0.0f;
 
 void mouseCallback(GLFWwindow* window, double newX, double newY) {
-  float xPos = (float)newX;
-  float yPos = (float)newY;
-
-  if (firstMouse) {
-    lastX = xPos;
-    lastY = yPos;
-    firstMouse = false;
-  }
-
-  float xOffset = xPos - lastX;
-  float yOffset = lastY - yPos;  // Reversed
-
-  lastX = xPos;
-  lastY = yPos;
-
-  camera.mouseMovement(xOffset, yOffset);
+  mouseInput(window, &camera, newX, newY, &lastX, &lastY, &firstMouseMovement);
 }
 
 int main() {
-  // Create the window
-  GLFWwindow* window = NULL;
-
-  // Init GLFW
-  glfwInit();
-
-  // Configure GLFW
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR_VERSION);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR_VERSION);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-#ifdef __APPLE__
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+  // Initialize GLFW and configure it
+  initAndConfigGLFW();
 
   // Create a GLFWwindow
-  window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, NULL, NULL);
-
-  // Check if the window was succesfully created
-  if (window == NULL) {
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return EXIT_FAILURE;
-  }
+  createGLFWwindow(&window);
 
   // Make the context current
   glfwMakeContextCurrent(window);
@@ -183,7 +152,7 @@ int main() {
     lightSource.setAmbientColor(1.0f, 1.0f, 1.0f, 0.2f);
     lightSource.setDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
     lightSource.setSpecularColor(1.0f, 1.0f, 1.0f, 32.0f, 0.8f);
-    lightSource.setPosition(2.0f, 1.0f, 3.0f);
+    lightSource.setPosition(2.0f, 1.0f, 3.0f);  // Light position not working ???
 
     // Draw the cube
     cubeVAO.draw(modelIndicesCount);

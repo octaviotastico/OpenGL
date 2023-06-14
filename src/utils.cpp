@@ -1,10 +1,30 @@
 // Local imports
 #include "utils.hpp"
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
-  glViewport(0, 0, width, height);
+void framebufferSizeCallback(GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); }
+
+// TODO: move to a new "inputs.cpp" file and maybe merge with processInput
+void mouseInput(GLFWwindow* window, Camera* camera, double newX, double newY, double* lastX, double* lastY,
+                bool* firstMouseMovement) {
+  float xPos = (float)newX;
+  float yPos = (float)newY;
+
+  if (*firstMouseMovement) {
+    (*lastX) = xPos;
+    (*lastY) = yPos;
+    (*firstMouseMovement) = false;
+  }
+
+  float xOffset = xPos - (*lastX);
+  float yOffset = (*lastY) - yPos;  // Reversed
+
+  (*lastX) = xPos;
+  (*lastY) = yPos;
+
+  (*camera).mouseMovement(xOffset, yOffset);
 }
 
+// TODO: move to a new "inputs.cpp" file
 void processInput(GLFWwindow* window, Camera* camera) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 

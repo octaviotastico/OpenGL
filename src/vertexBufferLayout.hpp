@@ -2,7 +2,7 @@
 #define __VERTEX_BUFFER_LAYOUT_HPP__
 
 // Library imports
-#include <GLFW/glfw3.h>
+#include "../dependencies/include/GLFW/glfw3.h"
 
 // Standard Libraries
 #include <vector>
@@ -31,21 +31,7 @@ class VertexBufferLayout {
   ~VertexBufferLayout() {}
 
   // Push a new element to the VertexBufferLayout.
-  void push(unsigned int count, int type, unsigned int offset = 0) {
-    unsigned int glType = 0;
-    unsigned int normalized = GL_FALSE;
-    if (type == GL_FLOAT) {
-      glType = GL_FLOAT;
-    } else if (type == GL_UNSIGNED_INT) {
-      glType = GL_UNSIGNED_INT;
-    } else if (type == GL_UNSIGNED_BYTE) {
-      glType = GL_UNSIGNED_BYTE;
-      normalized = GL_TRUE;
-    }
-
-    // Push new element to the VertexBufferLayout.
-    elements.push_back(VertexBufferElement{glType, count, offset, normalized});
-  }
+  void push(unsigned int count, int type, unsigned int offset = 0);
 
   // Get the stride of the VertexBufferLayout.
   inline const unsigned int getStride() const { return stride; }

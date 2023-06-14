@@ -33,5 +33,5 @@ void LightSource::setSpecularColor(float r, float g, float b, float radius, floa
 void LightSource::setPosition(float x, float y, float z) {
   position = glm::vec3(x, y, z);
 
-  (*shader).updateUniform("uLightPosition", position);
+  (*shader).updateUniform("uLightPosition", position);  // Bug here ???
 }

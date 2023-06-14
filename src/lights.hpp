@@ -6,11 +6,10 @@
 #include <string>
 
 // Libraries imports
-#include <GLFW/glfw3.h>
-
-#include <GLM/glm.hpp>
-#include <GLM/gtc/matrix_transform.hpp>
-#include <GLM/gtc/type_ptr.hpp>
+#include "../dependencies/include/GLFW/glfw3.h"
+#include "../dependencies/include/GLM/glm.hpp"
+#include "../dependencies/include/GLM/gtc/matrix_transform.hpp"
+#include "../dependencies/include/GLM/gtc/type_ptr.hpp"
 
 // Local imports
 #include "shaders.hpp"

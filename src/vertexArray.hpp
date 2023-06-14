@@ -2,8 +2,8 @@
 #define __VERTEX_ARRAY_HPP__
 
 // Libraries imports
-#include <GLAD/glad.h>
-#include <GLFW/glfw3.h>
+#include "../dependencies/include/GLAD/glad.h"
+#include "../dependencies/include/GLFW/glfw3.h"
 
 // Local imports
 #include "vertex.hpp"
@@ -12,25 +12,25 @@
 
 class VertexArray {
  public:
-  // ID of VertexArray object.
+  // ID of Vertex Array Object.
   unsigned int VAO_ID;
 
-  // Create a new VertexArray object.
+  // Create a new Vertex Array Object.
   VertexArray();
 
-  // Delete created VertexArray object.
+  // Delete created Vertex Array Object.
   ~VertexArray();
 
-  // Add a VertexBuffer to the VertexArray object.
+  // Add a Vertex Buffer Object (VBO) to the Vertex Array Object.
   void addVertexBufferObject(const VertexBuffer& vbo, const VertexBufferLayout& layout);
 
-  // Bind created VertexArray object.
+  // Bind created Vertex Array Object.
   void bind();
 
-  // Unbind created VertexArray object.
+  // Unbind created Vertex Array Object.
   void unbind();
 
-  // Draw the VertexArray object.
+  // Draw the Vertex Array Object.
   void draw(unsigned int count);
 };
 

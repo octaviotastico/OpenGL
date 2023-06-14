@@ -2,21 +2,24 @@
 #define __VERTEX_BUFFER_HPP__
 
 // Libraries imports
-#include <GLFW/glfw3.h>
+#include "../dependencies/include/GLFW/glfw3.h"
 
 class VertexBuffer {
  private:
+  // ID of Vertex Buffer Object.
   unsigned int VBO_ID;
 
  public:
-  // Create a new VertexBuffer object.
+  // Create a new Vertex Buffer Object.
   VertexBuffer(const void* data, unsigned int size);
-  // Delete created VertexBuffer object.
+
+  // Delete created Vertex Buffer Object.
   ~VertexBuffer();
 
-  // Bind VertexBuffer object.
+  // Bind Vertex Buffer Object.
   void bind() const;
-  // Unbind VertexBuffer object.
+
+  // Unbind Vertex Buffer Object.
   void unbind() const;
 };
 
