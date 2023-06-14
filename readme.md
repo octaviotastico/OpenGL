@@ -12,6 +12,8 @@ After compiling and executing openGL, you should be able to see this image:
 
 https://github.com/octaviotastico/OpenGL/assets/17755300/8115aa4f-d504-4782-b11a-e362e4728b0b
 
+https://github.com/octaviotastico/OpenGL/assets/17755300/b56d1ef6-4f89-4b1b-a97e-d5ed276d794a
+
 You can move around with **WASD**, look around using the **mouse**, and go up and down using **Shift** and **Space**.
 
 # Libraries used
